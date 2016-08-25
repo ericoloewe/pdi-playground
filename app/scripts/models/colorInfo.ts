@@ -3,12 +3,27 @@
 
 class ColorInfo {
     public pixels: Array<Color>;
+    public histogram: Array<number>;
+    public average: number;
+    public median: number;
+    public mode: number;
+    public variance: number;
     private colorType: ColorType;
 
     constructor(colorType: ColorType, imageData: ImageData) {
         this.pixels = new Array<Color>();
         this.colorType = colorType;
+
+        this.defineValues(imageData);
+    }
+
+    private defineValues(imageData: ImageData) {
         this.getColorPixels(imageData);
+        this.defineHistogram();
+        this.defineAverage();
+        this.defineMedian();
+        this.defineMode();
+        this.defineVariance();
     }
 
     private getColorPixels(imageData: ImageData) {
@@ -17,7 +32,7 @@ class ColorInfo {
         }
     }
 
-    public histogram() {
+    private defineHistogram() {
         var histogram = new Array();
 
         for (var i = 0; i <= 255; i++) {
@@ -28,20 +43,20 @@ class ColorInfo {
             histogram[color.value] += 1;
         });
 
-        return histogram;
+        this.histogram = histogram;
     }
 
-    public average() {
+    private defineAverage() {
         var somaPixels = 0;
 
         this.pixels.forEach(function (color, i) {
             somaPixels += color.value;
         });
 
-        return somaPixels / this.pixels.length;
+        this.average = somaPixels / this.pixels.length;
     }
 
-    public median() {
+    private defineMedian() {
         var simplePixels = new Array<number>();
         var pixel: any;
 
@@ -50,20 +65,21 @@ class ColorInfo {
         });
 
         simplePixels.sort();
-        return simplePixels[Math.floor(simplePixels.length / 2)];
+        this.median = simplePixels[Math.floor(simplePixels.length / 2)];
     }
 
-    public mode() {
-        return Math.max.apply(Math, this.histograma());
+    private defineMode() {
+        this.mode = Math.max.apply(Math, this.histogram);
     }
 
-    public variance() {
+    private defineVariance() {
         var sumVariance = 0;
+        var self = this;
 
         this.pixels.forEach(function (color) {
-            sumVariance += Math.pow((color.value - this.average), 2);
+            sumVariance += Math.pow((color.value - self.average), 2);
         });
 
-        return sumVariance / this.pixels.length;
+        this.variance = sumVariance / this.pixels.length;
     }
 }

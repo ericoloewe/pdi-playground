@@ -41,14 +41,37 @@
                                 Estatisticas
                             </div>
                             <div class="panel-body">
-                                <h5 class="color">ALPHA</h5>
+                                <h5 class="color">RED</h5>
                                 <p class="statistics">
-                                    <strong>Media: </strong> {{statistics.average}} <br>
-                                    <strong>Mediana: </strong> {{statistics.median}} <br>
-                                    <strong>Moda: </strong> {{statistics.mode}} <br>
-                                    <strong>Variancia: </strong> {{statistics.variance}}
+                                    <strong>Media: </strong> {{statistics.red.average}} <br>
+                                    <strong>Mediana: </strong> {{statistics.red.median}} <br>
+                                    <strong>Moda: </strong> {{statistics.red.mode}} <br>
+                                    <strong>Variancia: </strong> {{statistics.red.variance}}
                                 </p>
                                 <hr>
+                                <h5 class="color">GREEN</h5>
+                                <p class="statistics">
+                                    <strong>Media: </strong> {{statistics.green.average}} <br>
+                                    <strong>Mediana: </strong> {{statistics.green.median}} <br>
+                                    <strong>Moda: </strong> {{statistics.green.mode}} <br>
+                                    <strong>Variancia: </strong> {{statistics.green.variance}}
+                                </p>
+                                <hr>
+                                <h5 class="color">BLUE</h5>
+                                <p class="statistics">
+                                    <strong>Media: </strong> {{statistics.blue.average}} <br>
+                                    <strong>Mediana: </strong> {{statistics.blue.median}} <br>
+                                    <strong>Moda: </strong> {{statistics.blue.mode}} <br>
+                                    <strong>Variancia: </strong> {{statistics.blue.variance}}
+                                </p>
+                                <hr>
+                                <h5 class="color">ALPHA</h5>
+                                <p class="statistics">
+                                    <strong>Media: </strong> {{statistics.alpha.average}} <br>
+                                    <strong>Mediana: </strong> {{statistics.alpha.median}} <br>
+                                    <strong>Moda: </strong> {{statistics.alpha.mode}} <br>
+                                    <strong>Variancia: </strong> {{statistics.alpha.variance}}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -58,7 +81,7 @@
                                 Histograma
                             </div>
                             <div class="panel-body">
-                                <div class="chart-histogram"></div>
+                                <div class="chart-red-histogram"></div>
                             </div>
                         </div>
                     </div>

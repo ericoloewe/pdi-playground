@@ -7,10 +7,10 @@ class Picture {
     private image: HTMLImageElement;
     private imageData: ImageData;
     private imageMatrix: Array<Array<Array<number>>>;
-    private red: ColorInfo;
-    private green: ColorInfo;
-    private blue: ColorInfo;
-    private alpha: ColorInfo;
+    public red: ColorInfo;
+    public green: ColorInfo;
+    public blue: ColorInfo;
+    public alpha: ColorInfo;
     public width: number;
     public height: number;
 
@@ -80,55 +80,5 @@ class Picture {
                 x = 0;
             }
         }
-    }
-
-    public histograma(pixels: Array<Color>) {
-        var histograma = new Array();
-
-        for (var i = 0; i <= 255; i++) {
-            histograma[i] = 0;
-        }
-
-        pixels.forEach(function (color) {
-            histograma[color.value] += 1;
-        });
-
-        return histograma;
-    }
-
-    public average(pixels: Array<Color>) {
-        var somaPixels = 0;
-
-        pixels.forEach(function (color, i) {
-            somaPixels += color.value;
-        });
-
-        return somaPixels / pixels.length;
-    }
-
-    public median(pixels: Array<Color>) {
-        var simplePixels = new Array<number>();
-        var pixel: any;
-
-        pixels.forEach(function (color, i) {
-            simplePixels[i] = color.value;
-        });
-
-        simplePixels.sort();
-        return simplePixels[Math.floor(simplePixels.length / 2)];
-    }
-
-    public mode(pixels: Array<Color>) {
-        return Math.max.apply(Math, this.histograma(pixels));
-    }
-
-    public variance(pixels: Array<Color>) {
-        var sumVariance = 0;
-
-        pixels.forEach(function (color) {
-            sumVariance += Math.pow((color.value - this.average), 2);
-        });
-
-        return sumVariance / pixels.length;
     }
 }

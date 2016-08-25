@@ -17,24 +17,45 @@ class StatisticsView extends View {
         var self = this;
 
         $(this.image.getHtmlImage()).on("load", function () {
+            self.defineStatistics();
             self.openChart();
-            
-            self.scope.statistics = {
-                average: self.image.average,
-                median: self.image.median,
-                mode: self.image.mode,
-                variance: self.image.variance
-            };
-
-            console.log(self.image);
-
             self.render();
+            console.log(self);
         });
     }
 
+    private defineStatistics() {
+        this.scope.statistics = {
+            red: {
+                average: this.image.red.average,
+                median: this.image.red.median,
+                mode: this.image.red.mode,
+                variance: this.image.red.variance
+            },
+            green: {
+                average: this.image.green.average,
+                median: this.image.green.median,
+                mode: this.image.green.mode,
+                variance: this.image.green.variance
+            },
+            blue: {
+                average: this.image.blue.average,
+                median: this.image.blue.median,
+                mode: this.image.blue.mode,
+                variance: this.image.blue.variance
+            },
+            alpha: {
+                average: this.image.alpha.average,
+                median: this.image.alpha.median,
+                mode: this.image.alpha.mode,
+                variance: this.image.alpha.variance
+            }
+        };
+    }
+
     private openChart() {
-        new Chartist.Line(".chart-histogram", {
-            series: [this.image.histograma]
+        new Chartist.Line(".chart-red-histogram", {
+            series: [this.image.red.histogram]
         }, {
                 showArea: true,
                 showLine: false,
