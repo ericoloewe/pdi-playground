@@ -1,0 +1,6 @@
+{
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "out": "bootstrap.min.js"
+}

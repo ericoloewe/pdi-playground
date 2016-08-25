@@ -1,0 +1,124 @@
+// ========================================================================
+// Mixins
+// ========================================================================
+
+@import "compass";
+
+@mixin form-control-focus($color: #66afe9) {
+    $color-rgba: rgba(red($color), green($color), blue($color), .6);
+    border-color: $color;
+    outline: 0;
+    @include box-shadow(inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px $color-rgba);
+}
+
+@mixin make-triangle-for($side, $width) {
+    width: 0;
+    height: 0;
+    
+    @if $side == "right" {
+        border-left: $width dashed;
+        border-left: $width solid\9;
+        border-top: $width solid transparent;
+        border-bottom: $width solid transparent;
+    } @else if $side == "down" {
+        border-top: $width dashed;
+        border-top: $width solid\9;
+        border-right: $width solid transparent;
+        border-left: $width solid transparent;
+    } @else if $side == "up" {
+        border-bottom: $width dashed;
+        border-bottom: $width solid\9;
+        border-right: $width solid transparent;
+        border-left: $width solid transparent;
+    } @else if $side == "left" {
+        border-right: $width dashed;
+        border-right: $width solid\9;
+        border-top: $width solid transparent;
+        border-down: $width solid transparent;
+    }
+}
+
+@mixin alert-variant($background, $border, $text-color) {
+    background-color: $background;
+    border-color: $border;
+    color: $text-color;
+
+    hr {
+        border-top-color: darken($border, 5%);
+    }
+    .alert-link {
+        color: darken($text-color, 10%);
+    }
+}
+
+@mixin custom-scrollbar($size, $primary, $secondary: lighten($primary, 25%)) {
+    ::-webkit-scrollbar {
+		width:  $size;
+		height: $size;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: $primary;
+	}
+
+	::-webkit-scrollbar-track {
+		background: $secondary;
+	}
+  
+    // For Internet Explorer
+    scrollbar-face-color: $primary;
+    scrollbar-track-color: $secondary;
+}
+
+@mixin bounce($seconds: 1s) {
+    @include animation(bounce $seconds);    
+}
+
+@include keyframes(bounce) {
+    0% {
+        transform:  rotate(0deg) ;
+    }
+    20% {
+        transform:  rotate(15deg) ;
+    }
+    40% {
+        transform:  rotate(-10deg) ;
+    }
+    60% {
+        transform:  rotate(5deg) ;
+    }
+    80% {
+        transform:  rotate(-5deg) ;
+    }
+    100% {
+        transform:  rotate(0deg) ;
+    }
+}
+
+@mixin jump-and-turn-left($seconds: 1s) {
+    @include animation(jump-and-turn-left $seconds);    
+}
+
+@include keyframes(jump-and-turn-left) {
+    0%{
+        @include translateY(0);
+    }
+    20%{
+        @include translateY(0);
+    }
+    40%{
+        @include transform(translateY(-100%) rotateZ(90deg));
+    }
+    50%{
+        @include translateY(0);
+    }
+    60%{
+        @include transform(translateY(-50%) rotateZ(180deg));
+    }
+    80%{
+        @include transform(translateY(0) rotateZ(360deg));
+    }
+    100%{
+        @include translateY(0);
+    }
+}

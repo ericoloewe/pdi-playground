@@ -1,0 +1,2 @@
+
+const Electron = require("electron");

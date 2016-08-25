@@ -1,0 +1,64 @@
+// ========================================================================
+// Variables
+// ========================================================================
+
+// ========================================================================
+// Fonts
+$font_basic: "Helvetica Neue", Helvetica, Arial, sans-serif; // ESPESSURA - (0)
+// ========================================================================
+// Colors
+$color_text: #333;
+$color_black: #000;
+$color_white: #fff;
+$color_red: #fc0d1b;
+$color_dark_red: #c20b0f;
+$color_gray: #dedede;
+$color_light_gray: #fafafa;
+$color_dark_gray: #868686;
+
+// ========================================================================
+// Background Colors
+$bg_main: #ededec;
+$bg_black: #000;
+$bg_white: #fff;
+$bg_red: #fc0d1b;
+$bg_dark_red: #c20b0f;
+$bg_gray: #dedede;
+$bg_light_gray: #fafafa;
+$bg_dark_gray: #868686;
+// ========================================================================
+// Widths
+$width_lg: 1200px; // large  > 1200px
+$width_md: 992px;  // medium > 992px
+$width_sm: 768px;  // small  > 768px
+$width_xs: 480px;  // extra small < 768px
+
+// ========================================================================
+// Custom Colors
+$scrollbar_gray: #d3d3d3;
+
+// ========================================================================
+// Url Images
+// $img_fundo_cadastro_home: url("../img/imagem.jpg");
+
+// ========================================================================
+// Sprites
+// $sprite_default: sprite-map("sprites/default/*.png");
+
+// ========================================================================
+// Components
+
+//-------------------------------Alert-------------------------------------
+// feito com o auxilio de http://paletton.com/#uid=75B0u0kumFtiQMborI1E8v2EOnV
+$bg_alert_info: #0ABDB0;
+$border_alert_info: #56D1C8;
+$color_alert_info: #FFFFFF;
+$bg_alert_success: #20E00C;
+$border_alert_success: #6DEA60;
+$color_alert_success: #FFFFFF;
+$bg_alert_warning: #FF760D; 
+$border_alert_warning: #FFAA69;
+$color_alert_warning: #FFFFFF;
+$bg_alert_danger: #FC0D19;
+$border_alert_danger: #FD6870;
+$color_alert_danger: #FFFFFF;
