@@ -2,7 +2,7 @@
 "use strict";
 
 class ColorInfo {
-    public pixels: Array<Color>;
+    public matrix: Array<Array<Color>>;
     public histogram: Array<number>;
     public average: number;
     public median: number;
@@ -10,15 +10,15 @@ class ColorInfo {
     public variance: number;
     private colorType: ColorType;
 
-    constructor(colorType: ColorType, imageData: ImageData) {
-        this.pixels = new Array<Color>();
+    constructor(colorType: ColorType, imageMatrix: Array<Array<Array<number>>>) {
+        this.matrix = new Array<Array<Color>>();
         this.colorType = colorType;
 
-        this.defineValues(imageData);
+        this.defineValues(imageMatrix);
     }
 
-    private defineValues(imageData: ImageData) {
-        this.getColorPixels(imageData);
+    private defineValues(imageMatrix: Array<Array<Array<number>>>) {
+        this.getColorPixels(imageMatrix);
         this.defineHistogram();
         this.defineAverage();
         this.defineMedian();
@@ -26,20 +26,27 @@ class ColorInfo {
         this.defineVariance();
     }
 
-    private getColorPixels(imageData: ImageData) {
+    private getColorPixels(imageMatrix: Array<Array<Array<number>>>) {
+        var self = this;
         if (this.colorType === ColorType.GRAY) {
-            var gray:number, red:number, green:number, blue:number;
-            for (var i = 0; i < imageData.data.length; i += 4) {
-                red = imageData.data[i + ColorType.RED];
-                green = imageData.data[i + ColorType.GREEN];
-                blue = imageData.data[i + ColorType.BLUE];
-                gray = (red + green + blue) / 3;
-                this.pixels.push(new Color(this.colorType, gray));
-            }
+            var gray: number, red: number, green: number, blue: number;
+            imageMatrix.forEach(function (arrayX, i) {
+                self.matrix[i] = new Array<Color>();
+                arrayX.forEach(function (color, j) {
+                    red = color[ColorType.RED];
+                    green = color[ColorType.GREEN];
+                    blue = color[ColorType.BLUE];
+                    gray = (red + green + blue) / 3;
+                    self.matrix[i][j] = new Color(self.colorType, gray);
+                });
+            });
         } else {
-            for (var i = 0; i < imageData.data.length; i += 4) {
-                this.pixels.push(new Color(this.colorType, imageData.data[i + this.colorType]));
-            }
+            imageMatrix.forEach(function (arrayX, i) {
+                self.matrix[i] = new Array<Color>();
+                arrayX.forEach(function (color, j) {
+                    self.matrix[i][j] = new Color(self.colorType, color[self.colorType]);
+                });
+            });
         }
     }
 
@@ -50,29 +57,36 @@ class ColorInfo {
             histogram[i] = 0;
         }
 
-        this.pixels.forEach(function (color) {
-            histogram[color.value] += 1;
+        this.matrix.forEach(function (arrayX, i) {
+            arrayX.forEach(function (color, j) {
+                histogram[color.value] += 1;
+            });
         });
 
         this.histogram = histogram;
     }
 
     private defineAverage() {
-        var somaPixels = 0;
+        var sum = 0, arrayLenght = 0;
 
-        this.pixels.forEach(function (color, i) {
-            somaPixels += color.value;
+        this.matrix.forEach(function (arrayX, i) {
+            arrayX.forEach(function (color, j) {
+                sum += color.value;
+                arrayLenght++;
+            });
         });
 
-        this.average = somaPixels / this.pixels.length;
+        this.average = sum / arrayLenght;
     }
 
     private defineMedian() {
         var simplePixels = new Array<number>();
         var pixel: any;
 
-        this.pixels.forEach(function (color, i) {
-            simplePixels[i] = color.value;
+        this.matrix.forEach(function (arrayX, i) {
+            arrayX.forEach(function (color, j) {
+                simplePixels[i + j] = color.value;
+            });
         });
 
         simplePixels.sort();
@@ -87,10 +101,56 @@ class ColorInfo {
         var sumVariance = 0;
         var self = this;
 
-        this.pixels.forEach(function (color) {
-            sumVariance += Math.pow((color.value - self.average), 2);
+        this.matrix.forEach(function (arrayX, i) {
+            arrayX.forEach(function (color, j) {
+                sumVariance += Math.pow((color.value - self.average), 2);
+            });
         });
 
-        this.variance = sumVariance / this.pixels.length;
+        this.variance = sumVariance / this.matrix.length;
+    }
+
+    public averageRightHalf() {
+        var sum = 0, arrayLenght = 0;
+
+        this.matrix.forEach(function (arrayX, i) {
+            var half = Math.round(arrayX.length / 2);
+            for (var j = half; j < arrayX.length; j++) {
+                sum += arrayX[j].value;
+                arrayLenght++;
+            }
+        });
+
+        return sum / arrayLenght;
+    }
+
+    public medianLeftHalf() {
+        var medianArray = new Array<number>(), arrayLenght = 0;
+
+        this.matrix.forEach(function (arrayX, i) {
+            var half = Math.round(arrayX.length / 2);
+            for (var j = 0; j < half; j++) {
+                medianArray[i + j] = arrayX[j].value;
+                arrayLenght++;
+            }
+        });
+
+        medianArray.sort();
+        return medianArray[Math.floor(medianArray.length / 2)];
+    }
+
+    public modeAboveMainDiagonal() {
+        var self = this;
+        var maxValue = this.matrix[0][0].value;
+
+        this.matrix.forEach(function (arrayX, i) {
+            for (var j = i; j < arrayX.length; j++) {
+                if (maxValue < arrayX[j].value) {
+                    maxValue = arrayX[j].value;
+                }
+            }
+        });
+
+        return maxValue;
     }
 }

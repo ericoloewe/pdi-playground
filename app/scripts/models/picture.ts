@@ -47,25 +47,25 @@ class Picture {
     }
 
     private defineValues() {
-        this.defineColorsInfo();
         this.definePictureMatrix();
+        this.defineColorsInfo();
     }
 
     private defineColorsInfo() {
-        this.red = new ColorInfo(ColorType.RED, this.imageData);
-        this.blue = new ColorInfo(ColorType.BLUE, this.imageData);
-        this.green = new ColorInfo(ColorType.GREEN, this.imageData);
-        this.alpha = new ColorInfo(ColorType.ALPHA, this.imageData);
-        this.gray = new ColorInfo(ColorType.GRAY, this.imageData);
+        this.red = new ColorInfo(ColorType.RED, this.imageMatrix);
+        this.blue = new ColorInfo(ColorType.BLUE, this.imageMatrix);
+        this.green = new ColorInfo(ColorType.GREEN, this.imageMatrix);
+        this.alpha = new ColorInfo(ColorType.ALPHA, this.imageMatrix);
+        this.gray = new ColorInfo(ColorType.GRAY, this.imageMatrix);
     }
 
     private definePictureMatrix() {
         var y = 0;
         var x = 0;
+        var i = 0;
 
-        for (var i = 0, j = this.imageData.data.length; i < j; i += 4) {
-
-            if (!this.imageMatrix[y]) {
+        while (i < this.imageData.data.length) {
+            if (this.imageMatrix[y] === undefined) {
                 this.imageMatrix[y] = new Array<Array<number>>();
             }
 
@@ -77,6 +77,7 @@ class Picture {
             ];
 
             x++;
+            i += 4;
             if (x > this.imageData.width - 1) {
                 y++;
                 x = 0;

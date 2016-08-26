@@ -28,6 +28,9 @@ class StatisticsView extends View {
         this.scope.statistics = {
             gray: {
                 average: this.image.gray.average,
+                averageRightHalf: this.image.gray.averageRightHalf(),
+                medianLeftHalf: this.image.gray.medianLeftHalf(),
+                modeAboveMainDiagonal: this.image.gray.modeAboveMainDiagonal(),
                 median: this.image.gray.median,
                 mode: this.image.gray.mode,
                 variance: this.image.gray.variance
