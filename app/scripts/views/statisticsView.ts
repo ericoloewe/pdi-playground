@@ -18,7 +18,7 @@ class StatisticsView extends View {
 
         $(this.image.getHtmlImage()).on("load", function () {
             self.defineStatistics();
-            self.openChart();
+            self.openCharts();
             self.render();
             console.log(self);
         });
@@ -26,6 +26,12 @@ class StatisticsView extends View {
 
     private defineStatistics() {
         this.scope.statistics = {
+            gray: {
+                average: this.image.gray.average,
+                median: this.image.gray.median,
+                mode: this.image.gray.mode,
+                variance: this.image.gray.variance
+            },
             red: {
                 average: this.image.red.average,
                 median: this.image.red.median,
@@ -53,9 +59,57 @@ class StatisticsView extends View {
         };
     }
 
-    private openChart() {
+    private openCharts() {
+        new Chartist.Line(".chart-gray-histogram", {
+            series: [this.image.gray.histogram]
+        }, {
+                showArea: true,
+                showLine: false,
+                showPoint: false,
+                fullWidth: true,
+                axisX: {
+                    showLabel: false,
+                    showGrid: false
+                }
+            });
         new Chartist.Line(".chart-red-histogram", {
             series: [this.image.red.histogram]
+        }, {
+                showArea: true,
+                showLine: false,
+                showPoint: false,
+                fullWidth: true,
+                axisX: {
+                    showLabel: false,
+                    showGrid: false
+                }
+            });
+        new Chartist.Line(".chart-green-histogram", {
+            series: [this.image.green.histogram]
+        }, {
+                showArea: true,
+                showLine: false,
+                showPoint: false,
+                fullWidth: true,
+                axisX: {
+                    showLabel: false,
+                    showGrid: false
+                }
+            });
+        new Chartist.Line(".chart-blue-histogram", {
+            series: [this.image.blue.histogram]
+        }, {
+                showArea: true,
+                showLine: false,
+                showPoint: false,
+                fullWidth: true,
+                axisX: {
+                    showLabel: false,
+                    showGrid: false
+                }
+            });
+        new Chartist.Line(".chart-alpha-histogram", {
+            series: [this.image.alpha.histogram]
         }, {
                 showArea: true,
                 showLine: false,

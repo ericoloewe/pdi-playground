@@ -27,8 +27,19 @@ class ColorInfo {
     }
 
     private getColorPixels(imageData: ImageData) {
-        for (var i = 0; i < imageData.data.length; i += 4) {
-            this.pixels.push(new Color(this.colorType, imageData.data[i + this.colorType]));
+        if (this.colorType === ColorType.GRAY) {
+            var gray:number, red:number, green:number, blue:number;
+            for (var i = 0; i < imageData.data.length; i += 4) {
+                red = imageData.data[i + ColorType.RED];
+                green = imageData.data[i + ColorType.GREEN];
+                blue = imageData.data[i + ColorType.BLUE];
+                gray = (red + green + blue) / 3;
+                this.pixels.push(new Color(this.colorType, gray));
+            }
+        } else {
+            for (var i = 0; i < imageData.data.length; i += 4) {
+                this.pixels.push(new Color(this.colorType, imageData.data[i + this.colorType]));
+            }
         }
     }
 

@@ -11,6 +11,7 @@ class Picture {
     public green: ColorInfo;
     public blue: ColorInfo;
     public alpha: ColorInfo;
+    public gray: ColorInfo;
     public width: number;
     public height: number;
 
@@ -55,6 +56,7 @@ class Picture {
         this.blue = new ColorInfo(ColorType.BLUE, this.imageData);
         this.green = new ColorInfo(ColorType.GREEN, this.imageData);
         this.alpha = new ColorInfo(ColorType.ALPHA, this.imageData);
+        this.gray = new ColorInfo(ColorType.GRAY, this.imageData);
     }
 
     private definePictureMatrix() {

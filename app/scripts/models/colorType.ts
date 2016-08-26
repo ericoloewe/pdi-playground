@@ -1,8 +1,9 @@
 "use strict";
 
 enum ColorType {
-    RED,
-    GREEN,
-    BLUE,
-    ALPHA
+    RED = 0,
+    GREEN = 1,
+    BLUE = 2,
+    ALPHA = 3,
+    GRAY = 4,
 }
