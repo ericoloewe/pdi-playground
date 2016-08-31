@@ -2,6 +2,7 @@ var gulp = require("gulp");
 var ts = require("gulp-typescript");
 var concat = require("gulp-concat");
 var uglify = require("gulp-uglify");
+var rename = require("gulp-rename");
 var tsProject = ts.createProject("tsconfig.json");
 
 var paths = {
@@ -11,7 +12,7 @@ var paths = {
 };
 
 var resourcesPaths = {
-    js: ["./resources/imports.js", "./main.min.js"],
+    js: ["./resources/imports.js", "./main.js"],
     compile: ["./resources/**/*.ts"],
     watch: ["./resources/**/*.ts"],
     dest: "./"
@@ -23,23 +24,29 @@ gulp.task("scripts", function () {
             noImplicitAny: true,
             out: "app.min.js"
         }))
-        .pipe(concat("app.min.js"))
-        // .pipe(uglify())
+        .pipe(concat("app.js"))
+        .pipe(gulp.dest(paths.dest))
+        .pipe(rename({ suffix: ".min" }))        
+        .pipe(uglify())
         .pipe(gulp.dest(paths.dest));
 });
 
 gulp.task("resources-scripts:ts", function () {
     return gulp.src(resourcesPaths.compile)
         .pipe(ts(tsProject))
-        .pipe(concat("main.min.js"))
-        // .pipe(uglify())
+        .pipe(concat("main.js"))
+        .pipe(gulp.dest(resourcesPaths.dest))
+        .pipe(rename({ suffix: ".min" }))
+        .pipe(uglify())
         .pipe(gulp.dest(resourcesPaths.dest));
 });
 
 gulp.task("resources-scripts", ["resources-scripts:ts"], function () {
     return gulp.src(resourcesPaths.js)
-        .pipe(concat("main.min.js"))
-        // .pipe(uglify())
+        .pipe(concat("main.js"))
+        .pipe(gulp.dest(resourcesPaths.dest))
+        .pipe(rename({ suffix: ".min" }))
+        .pipe(uglify())
         .pipe(gulp.dest(resourcesPaths.dest));
 });
 

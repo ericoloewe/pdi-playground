@@ -3,3 +3,5 @@ node_modules
 npm-debug.log
 app/scripts/**/*.js
 app/styles/**/*.css
+main.js
+main.min.js
