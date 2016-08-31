@@ -1,3 +1,6 @@
 .sass-cache
 node_modules
 npm-debug.log
+app/scripts/app.min.js
+app/styles/main.css
+app/styles/main.min.css

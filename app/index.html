@@ -8,177 +8,20 @@
 </head>
 
 <body>
-    <header>
-        <nav class="navbar navbar-default navbar-static-top">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#">PDI</a>
-                </div>
+    <header data-fragment="header"></header>
 
-                <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav">
-                        <li>
-                            <a href="#">
-                                <i class="glyphicon glyphicon-stats"></i>&nbsp;&nbsp;ESTATISTICAS
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+    <div data-fragment="home"></div>
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-4">
-                <canvas id="PDI_CANVAS" height="512" width="512" style="border: 1px solid #000000"></canvas>
-            </div>
-            <div class="col-sm-8">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                CINZA
-                            </div>
-                            <div class="panel-body">
-                                <ul class="nav nav-tabs">
-                                    <li class="active"><a data-toggle="tab" href="#grayChart">GRAFICO</a></li>
-                                    <li><a data-toggle="tab" href="#grayNumbers">NUMEROS</a></li>
-                                </ul>
-                                <div class="tab-content">
-                                    <div id="grayChart" class="tab-pane fade in active">
-                                        <div class="chart-gray-histogram"></div>
-                                    </div>
-                                    <div id="grayNumbers" class="tab-pane fade">
-                                        <p class="statistics">
-                                            <strong>Media: </strong> {{statistics.gray.average}} <br>
-                                            <strong>Media metade da direita: </strong> {{statistics.gray.averageRightHalf}} <br>
-                                            <strong>Mediana metade da esquerda: </strong> {{statistics.gray.medianLeftHalf}} <br>
-                                            <strong>Moda diagonal principal: </strong> {{statistics.gray.modeAboveMainDiagonal}} <br>
-                                            <strong>Mediana: </strong> {{statistics.gray.median}} <br>
-                                            <strong>Moda: </strong> {{statistics.gray.mode}} <br>
-                                            <strong>Variancia: </strong> {{statistics.gray.variance}}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                VERMELHO
-                            </div>
-                            <div class="panel-body">
-                                <ul class="nav nav-tabs">
-                                    <li class="active"><a data-toggle="tab" href="#redChart">GRAFICO</a></li>
-                                    <li><a data-toggle="tab" href="#redNumbers">NUMEROS</a></li>
-                                </ul>
-                                <div class="tab-content">
-                                    <div id="redChart" class="tab-pane fade in active">
-                                        <div class="chart-red-histogram"></div>
-                                    </div>
-                                    <div id="redNumbers" class="tab-pane fade">
-                                        <p class="statistics">
-                                            <strong>Media: </strong> {{statistics.red.average}} <br>
-                                            <strong>Mediana: </strong> {{statistics.red.median}} <br>
-                                            <strong>Moda: </strong> {{statistics.red.mode}} <br>
-                                            <strong>Variancia: </strong> {{statistics.red.variance}}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                VERDE
-                            </div>
-                            <div class="panel-body">
-                                <ul class="nav nav-tabs">
-                                    <li class="active"><a data-toggle="tab" href="#greenChart">GRAFICO</a></li>
-                                    <li><a data-toggle="tab" href="#greenNumbers">NUMEROS</a></li>                                    
-                                </ul>
-                                <div class="tab-content">
-                                    <div id="greenChart" class="tab-pane fade in active">
-                                        <div class="chart-green-histogram"></div>
-                                    </div>
-                                    <div id="greenNumbers" class="tab-pane fade">
-                                        <p class="statistics">
-                                            <strong>Media: </strong> {{statistics.green.average}} <br>
-                                            <strong>Mediana: </strong> {{statistics.green.median}} <br>
-                                            <strong>Moda: </strong> {{statistics.green.mode}} <br>
-                                            <strong>Variancia: </strong> {{statistics.green.variance}}
-                                        </p>
-                                    </div>                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                AZUL
-                            </div>
-                            <div class="panel-body">
-                                <ul class="nav nav-tabs">
-                                    <li class="active"><a data-toggle="tab" href="#blueChart">GRAFICO</a></li>
-                                    <li><a data-toggle="tab" href="#blueNumbers">NUMEROS</a></li>                                    
-                                </ul>
-                                <div class="tab-content">
-                                    <div id="blueChart" class="tab-pane fade in active">
-                                        <div class="chart-blue-histogram"></div>
-                                    </div>
-                                    <div id="blueNumbers" class="tab-pane fade">
-                                        <p class="statistics">
-                                            <strong>Media: </strong> {{statistics.blue.average}} <br>
-                                            <strong>Mediana: </strong> {{statistics.blue.median}} <br>
-                                            <strong>Moda: </strong> {{statistics.blue.mode}} <br>
-                                            <strong>Variancia: </strong> {{statistics.blue.variance}}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                ALPHA
-                            </div>
-                            <div class="panel-body">
-                                <ul class="nav nav-tabs">
-                                    <li class="active"><a data-toggle="tab" href="#alphaChart">GRAFICO</a></li>
-                                    <li><a data-toggle="tab" href="#alphaNumbers">NUMEROS</a></li>
-                                </ul>
-                                <div class="tab-content">
-                                    <div id="alphaChart" class="tab-pane fade in active">
-                                        <div class="chart-alpha-histogram"></div>
-                                    </div>
-                                    <div id="alphaNumbers" class="tab-pane fade">
-                                        <p class="statistics">
-                                            <strong>Media: </strong> {{statistics.alpha.average}} <br>
-                                            <strong>Mediana: </strong> {{statistics.alpha.median}} <br>
-                                            <strong>Moda: </strong> {{statistics.alpha.mode}} <br>
-                                            <strong>Variancia: </strong> {{statistics.alpha.variance}}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="container-fluid" data-fragment="statistics">
+    </div>
 
-        <script>
+    <script>
         window.$ = window.jQuery = require("./scripts/extensions/jquery/jquery-3.1.0");
     </script>
-        <script src="scripts/extensions/bootstrap/main.js"></script>
-        <script src="scripts/extensions/chartist/chartist.js"></script>
-        <script src="scripts/utils/htmlTemplate.js"></script>
-        <script src="scripts/app.min.js"></script>
+
+    <script src="scripts/extensions/bootstrap/main.js"></script>
+    <script src="scripts/extensions/chartist/chartist.js"></script>
+    <script src="scripts/app.min.js"></script>
 </body>
 
 </html>

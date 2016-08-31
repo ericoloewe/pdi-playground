@@ -8,9 +8,15 @@ class StatisticsView extends View {
 
     public constructor() {
         super($(".statistics"));
+        var self = this;
+
         this.$canvas = $("#PDI_CANVAS");
-        this.image = new Picture("media/img/Lenna.png", this.$canvas[0]);
-        this.bindEvents();
+
+        this.$canvas.ready(function () {
+            self.$canvas = $("#PDI_CANVAS");
+            self.image = new Picture("media/img/Lenna.png", self.$canvas[0]);
+            self.bindEvents();
+        });
     }
 
     private bindEvents() {
