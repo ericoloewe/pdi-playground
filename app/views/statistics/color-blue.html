@@ -1,0 +1,24 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        AZUL
+    </div>
+    <div class="panel-body">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#blueChart">GRAFICO</a></li>
+            <li><a data-toggle="tab" href="#blueNumbers">NUMEROS</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="blueChart" class="tab-pane fade in active">
+                <div class="chart-blue-histogram"></div>
+            </div>
+            <div id="blueNumbers" class="tab-pane fade">
+                <p class="statistics">
+                    <strong>Media: </strong> {{statistics.blue.average}} <br>
+                    <strong>Mediana: </strong> {{statistics.blue.median}} <br>
+                    <strong>Moda: </strong> {{statistics.blue.mode}} <br>
+                    <strong>Variancia: </strong> {{statistics.blue.variance}}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

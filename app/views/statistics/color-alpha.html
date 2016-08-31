@@ -1,0 +1,24 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        ALPHA
+    </div>
+    <div class="panel-body">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#alphaChart">GRAFICO</a></li>
+            <li><a data-toggle="tab" href="#alphaNumbers">NUMEROS</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="alphaChart" class="tab-pane fade in active">
+                <div class="chart-alpha-histogram"></div>
+            </div>
+            <div id="alphaNumbers" class="tab-pane fade">
+                <p class="statistics">
+                    <strong>Media: </strong> {{statistics.alpha.average}} <br>
+                    <strong>Mediana: </strong> {{statistics.alpha.median}} <br>
+                    <strong>Moda: </strong> {{statistics.alpha.mode}} <br>
+                    <strong>Variancia: </strong> {{statistics.alpha.variance}}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

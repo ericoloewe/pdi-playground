@@ -1,0 +1,24 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        VERDE
+    </div>
+    <div class="panel-body">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#greenChart">GRAFICO</a></li>
+            <li><a data-toggle="tab" href="#greenNumbers">NUMEROS</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="greenChart" class="tab-pane fade in active">
+                <div class="chart-green-histogram"></div>
+            </div>
+            <div id="greenNumbers" class="tab-pane fade">
+                <p class="statistics">
+                    <strong>Media: </strong> {{statistics.green.average}} <br>
+                    <strong>Mediana: </strong> {{statistics.green.median}} <br>
+                    <strong>Moda: </strong> {{statistics.green.mode}} <br>
+                    <strong>Variancia: </strong> {{statistics.green.variance}}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
