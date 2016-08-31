@@ -2,7 +2,7 @@
   "name": "processamento-digital-de-imagens",
   "version": "0.0.1",
   "description": "A smart photoshop created in a class",
-  "main": "main.min.js",
+  "main": "main.js",
   "scripts": {
     "start": "gulp build && electron ."
   },
