@@ -12,14 +12,42 @@ class Fragment {
         this.urlTemplate = urlTemplate;
         this.childs = childs;
     }
+
+    public hasChilds(): boolean {
+        return this.childs.length >= 0;
+    }
+}
+
+class FragmentEvent {
+    public type: String;
+    public action: Function;
+
+    constructor(type?: String, action?: Function) {
+        this.type = type;
+        this.action = action;
+    }
 }
 
 class Fragments {
     private fragments: Array<Fragment>;
+    private currentFragmentLoaded: number;
+    private numberOfFragments: number;
+    private static events: Array<FragmentEvent>
 
     constructor(fragments: Array<Fragment>) {
+        Fragments.events = new Array<FragmentEvent>();
+        this.currentFragmentLoaded = 0;
+        this.numberOfFragments = this.countFragments(fragments);
         this.fragments = fragments;
         this.loadFragments();
+    }
+
+    private countFragments(fragments: Array<Fragment>): number {
+        var self = this;
+
+        return fragments.reduce(function (f1, f2) {
+            return f1 + 1 + (f2.hasChilds() ? self.countFragments(f2.childs) : 0);
+        }, 0);
     }
 
     private loadFragments() {
@@ -63,6 +91,12 @@ class Fragments {
                     .find("i[data-replace-id={0}]".format(indexToReplace))
                     .replaceWith($template);
 
+                self.currentFragmentLoaded++;
+
+                if (self.currentFragmentLoaded === self.numberOfFragments) {
+                    self.triggerEvent("load-all");
+                }
+
                 if (fragment.childs.length) {
                     self.loadFragmentChilds(fragment.childs);
                 }
@@ -84,5 +118,19 @@ class Fragments {
             $father = $(this);
             return $("<i>").attr("data-replace-id", i);
         };
+    }
+
+    private triggerEvent(type: String) {
+        var events = Fragments.events.filter(function (event) {
+            return event.type === type;
+        });
+
+        events.forEach(function (event) {
+            event.action();
+        });
+    }
+
+    public static on(type: String, action: Function) {
+        Fragments.events.push(new FragmentEvent(type, action));
     }
 }

@@ -3,8 +3,8 @@
 class PDIPlayGroundApplication extends Application {
     constructor() {
         super();
-        this.createViews();
         this.createFragments();
+        this.createViews();
     }
 
     private createViews() {
