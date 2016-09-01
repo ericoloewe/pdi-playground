@@ -2,6 +2,7 @@
 {
     "files.exclude": {
         ".sass-cache/": true,
-        "**/*min.js": true
+        "**/*min.js": true,
+        "**/*min.css": true,
     }
 }
