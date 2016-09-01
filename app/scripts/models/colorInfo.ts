@@ -15,6 +15,7 @@ class ColorInfo {
 
     constructor(colorType: ColorType, imageMatrix: Array<Array<Array<number>>>) {
         this.matrix = new Array<Array<Color>>();
+        this.simpleNumbersArray = Array<number>();
         this.colorType = colorType;
 
         this.defineValues(imageMatrix);
@@ -22,11 +23,6 @@ class ColorInfo {
 
     private defineValues(imageMatrix: Array<Array<Array<number>>>) {
         this.getColorPixels(imageMatrix);
-        this.simpleNumbersArray = this.matrix.reduce(function (a1, a2) {
-            return a1.concat(a2.map(function (color) {
-                return color.value;
-            }));
-        }, new Array<number>());
         this.defineHistogram();
         this.defineAverage();
         this.defineMedian();
@@ -46,6 +42,7 @@ class ColorInfo {
                     blue = color[ColorType.BLUE];
                     gray = (red + green + blue) / 3;
                     self.matrix[i][j] = new Color(self.colorType, gray);
+                    self.simpleNumbersArray.push(gray);
                 });
             });
         } else {
@@ -53,6 +50,7 @@ class ColorInfo {
                 self.matrix[i] = new Array<Color>();
                 arrayX.forEach(function (color, j) {
                     self.matrix[i][j] = new Color(self.colorType, color[self.colorType]);
+                    self.simpleNumbersArray.push(color[self.colorType]);
                 });
             });
         }
@@ -109,7 +107,7 @@ class ColorInfo {
 
         this.matrix.forEach(function (arrayX, i) {
             for (var j = i; j < arrayX.length; j++) {
-                pixelsAboveMainDiagonal.push( arrayX[j].value);
+                pixelsAboveMainDiagonal.push(arrayX[j].value);
             }
         });
 
