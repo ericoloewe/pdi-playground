@@ -5,6 +5,7 @@ class PDIPlayGroundApplication extends Application {
         super();
         this.createFragments();
         this.createViews();
+        this.createPages();
     }
 
     private createViews() {
@@ -25,6 +26,10 @@ class PDIPlayGroundApplication extends Application {
             ]),
             new Fragment("header", "views/shared/header.html")
         ]);
+    }
+
+    private createPages() {
+        this.pages = new Pages();
     }
 }
 

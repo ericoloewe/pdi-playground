@@ -3,11 +3,11 @@
 class View {
     protected scope: any;
     protected $scope: JQuery;
-    private fragment: JQuery;
+    private $fragment: JQuery;
 
-    public constructor(fragment: any = $("body")) {
+    public constructor($fragment: JQuery = $("body")) {
         this.scope = new Object();
-        this.fragment = fragment;
+        this.$fragment = $fragment;
         this.setScopes();
     }
 

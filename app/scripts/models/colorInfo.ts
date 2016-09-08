@@ -113,4 +113,16 @@ class ColorInfo {
 
         return Math.mode(pixelsAboveMainDiagonal);
     }
+
+    public varianceBelowMainDiagonal() {
+        var pixelsAboveMainDiagonal = new Array<number>();
+
+        this.matrix.forEach(function (arrayX, i) {
+            for (var j = 0; j < i; j++) {
+                pixelsAboveMainDiagonal.push(arrayX[j].value);
+            }
+        });
+
+        return Math.variance(pixelsAboveMainDiagonal);
+    }
 }

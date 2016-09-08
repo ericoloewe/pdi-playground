@@ -3,17 +3,19 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>PDI</title>
+    <title>PDI playground</title>
     <link rel="stylesheet" href="styles/main.css">
 </head>
 
 <body>
     <header data-fragment="header"></header>
 
-    <div data-fragment="home"></div>
-
-    <div class="container-fluid" data-fragment="statistics">
+    <div class="pages">
+        <div data-fragment="home"></div>
+        <div class="container-fluid" data-fragment="statistics">
+        </div>
     </div>
+
 
     <script>
         window.$ = window.jQuery = require("./scripts/extensions/jquery/jquery-3.1.0");

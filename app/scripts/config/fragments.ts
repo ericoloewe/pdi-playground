@@ -1,4 +1,5 @@
 /// <reference path="../utils/string.ts" />
+/// <reference path="events.ts" />
 "use strict";
 
 class Fragment {
@@ -18,24 +19,14 @@ class Fragment {
     }
 }
 
-class FragmentEvent {
-    public type: String;
-    public action: Function;
-
-    constructor(type?: String, action?: Function) {
-        this.type = type;
-        this.action = action;
-    }
-}
-
 class Fragments {
     private fragments: Array<Fragment>;
     private currentFragmentLoaded: number;
     private numberOfFragments: number;
-    private static events: Array<FragmentEvent>
+    private static eventManager: EventManager;
 
     constructor(fragments: Array<Fragment>) {
-        Fragments.events = new Array<FragmentEvent>();
+        Fragments.eventManager = new EventManager();
         this.currentFragmentLoaded = 0;
         this.numberOfFragments = this.countFragments(fragments);
         this.fragments = fragments;
@@ -94,7 +85,7 @@ class Fragments {
                 self.currentFragmentLoaded++;
 
                 if (self.currentFragmentLoaded === self.numberOfFragments) {
-                    self.triggerEvent("load-all");
+                    Fragments.eventManager.triggerEvent("load-all");
                 }
 
                 if (fragment.childs.length) {
@@ -120,17 +111,7 @@ class Fragments {
         };
     }
 
-    private triggerEvent(type: String) {
-        var events = Fragments.events.filter(function (event) {
-            return event.type === type;
-        });
-
-        events.forEach(function (event) {
-            event.action();
-        });
-    }
-
     public static on(type: String, action: Function) {
-        Fragments.events.push(new FragmentEvent(type, action));
+        Fragments.eventManager.on(type, action);
     }
 }
