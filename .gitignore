@@ -1,5 +1,6 @@
-.sass-cache
-node_modules
+.sass-cache/
+node_modules/
+dist/
 npm-debug.log
 app/scripts/**/*.js
 app/styles/**/*.css
