@@ -14,7 +14,7 @@ class StatisticsView extends View {
 
         this.$canvas.ready(function () {
             self.$canvas = $("#PDI_CANVAS");
-            self.image = new Picture("media/img/Lenna.png", self.$canvas[0]);
+            self.image = new Picture(PDIPlayGroundApplication.imagePath, self.$canvas[0]);
             self.bindEvents();
         });
     }

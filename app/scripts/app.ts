@@ -1,11 +1,29 @@
 /// <reference path="config/application.ts" />
+/// <reference path="views/homeView.ts" />
+/// <reference path="views/statisticsView.ts" />
 
 class PDIPlayGroundApplication extends Application {
+    public static own: PDIPlayGroundApplication;
+    public static imagePath: string;
+
     constructor() {
         super();
+        var self = this;
+
         this.createFragments();
+        Fragments.on("load-all", function () {
+            self.createHome();
+            self.createPages();
+        });
+    }
+
+    public initWithImage(image: string) {
+        PDIPlayGroundApplication.imagePath = image;
         this.createViews();
-        this.createPages();
+    }
+
+    private createHome() {
+        this.views.push(new HomeView());
     }
 
     private createViews() {
@@ -33,4 +51,4 @@ class PDIPlayGroundApplication extends Application {
     }
 }
 
-var app = new PDIPlayGroundApplication();
+PDIPlayGroundApplication.own = new PDIPlayGroundApplication();

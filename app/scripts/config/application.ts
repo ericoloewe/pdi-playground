@@ -8,6 +8,6 @@ class Application {
     protected pages: Pages;
 
     constructor() {
-        
+        this.views = new Array<View>();
     }
 }

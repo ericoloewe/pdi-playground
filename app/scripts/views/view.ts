@@ -14,13 +14,11 @@ class View {
     public setScopes() {
         var self = this;
 
-        Fragments.on("load-all", function () {
-            self.$scope = $("[data-scope]");
-            self.$scope.each(function () {
-                $(this).attr("data-scope", $(this).html());
-            });
-            self.render();
+        this.$scope = this.$fragment.find("[data-scope]");
+        this.$scope.each(function () {
+            $(this).attr("data-scope", $(this).html());
         });
+        this.render();
     }
 
     public render() {

@@ -3,12 +3,9 @@ class Pages {
     private links: JQuery;
 
     constructor() {
-        var self = this;
-        Fragments.on("load-all", function () {
-            self.links = $("[data-page-link]");
-            self.bindEvents();
-            self.activePage($(self.links[0]));
-        });
+        this.links = $("[data-page-link]");
+        this.bindEvents();
+        this.activePage($(this.links[0]));
     }
 
     private bindEvents() {
