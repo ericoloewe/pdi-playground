@@ -2,5 +2,6 @@
     "module": "commonjs",
     "noImplicitAny": true,
     "sourceMap": true,
-    "out": "bootstrap.min.js"
+    "out": "bootstrap.min.js",
+    "typescript.tsdk": "node_modules/gulp-typescript/node_modules/typescript/lib"
 }
