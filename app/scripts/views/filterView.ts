@@ -2,10 +2,10 @@
 /// <reference path="view.ts" />
 "use strict";
 
-class TransformView extends View {
-    private transform: Transform;
+class FilterView extends View {
+    private filter: Filter;
 
     public constructor() {
-        super($(".transform"));
+        super($(".filter"));
     }
 }

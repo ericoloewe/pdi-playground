@@ -33,38 +33,38 @@ class StatisticsView extends View {
     private defineStatistics() {
         this.scope.statistics = {
             gray: {
-                average: this.image.gray.average,
-                averageRightHalf: this.image.gray.averageRightHalf(),
-                medianLeftHalf: this.image.gray.medianLeftHalf(),
-                modeAboveMainDiagonal: this.image.gray.modeAboveMainDiagonal(),
-                varianceBelowMainDiagonal: this.image.gray.varianceBelowMainDiagonal(),
-                median: this.image.gray.median,
-                mode: this.image.gray.mode,
-                variance: this.image.gray.variance
+                average: this.image.gray.statistics.average,
+                averageRightHalf: this.image.gray.statistics.averageRightHalf(this.image.gray.matrix),
+                medianLeftHalf: this.image.gray.statistics.medianLeftHalf(this.image.gray.matrix),
+                modeAboveMainDiagonal: this.image.gray.statistics.modeAboveMainDiagonal(this.image.gray.matrix),
+                varianceBelowMainDiagonal: this.image.gray.statistics.varianceBelowMainDiagonal(this.image.gray.matrix),
+                median: this.image.gray.statistics.median,
+                mode: this.image.gray.statistics.mode,
+                variance: this.image.gray.statistics.variance
             },
             red: {
-                average: this.image.red.average,
-                median: this.image.red.median,
-                mode: this.image.red.mode,
-                variance: this.image.red.variance
+                average: this.image.red.statistics.average,
+                median: this.image.red.statistics.median,
+                mode: this.image.red.statistics.mode,
+                variance: this.image.red.statistics.variance
             },
             green: {
-                average: this.image.green.average,
-                median: this.image.green.median,
-                mode: this.image.green.mode,
-                variance: this.image.green.variance
+                average: this.image.green.statistics.average,
+                median: this.image.green.statistics.median,
+                mode: this.image.green.statistics.mode,
+                variance: this.image.green.statistics.variance
             },
             blue: {
-                average: this.image.blue.average,
-                median: this.image.blue.median,
-                mode: this.image.blue.mode,
-                variance: this.image.blue.variance
+                average: this.image.blue.statistics.average,
+                median: this.image.blue.statistics.median,
+                mode: this.image.blue.statistics.mode,
+                variance: this.image.blue.statistics.variance
             },
             alpha: {
-                average: this.image.alpha.average,
-                median: this.image.alpha.median,
-                mode: this.image.alpha.mode,
-                variance: this.image.alpha.variance
+                average: this.image.alpha.statistics.average,
+                median: this.image.alpha.statistics.median,
+                mode: this.image.alpha.statistics.mode,
+                variance: this.image.alpha.statistics.variance
             }
         };
     }

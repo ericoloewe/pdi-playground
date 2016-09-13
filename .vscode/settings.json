@@ -4,6 +4,5 @@
         ".sass-cache/": true,
         "**/*min.js": true,
         "**/*min.css": true
-    },
-    "typescript.tsdk": "node_modules/gulp-typescript/node_modules/typescript/lib"
+    }
 }

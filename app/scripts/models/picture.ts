@@ -5,7 +5,7 @@ class Picture {
     private canvas: any;
     private context: any;
     private image: HTMLImageElement;
-    private imageData: ImageData;
+    public imageData: ImageData;
     private imageMatrix: Array<Array<Array<number>>>;
     public red: ColorInfo;
     public green: ColorInfo;
@@ -48,18 +48,19 @@ class Picture {
 
     private defineValues() {
         this.definePictureMatrix();
-        this.defineColorsInfo();
     }
 
-    private defineColorsInfo() {
-        this.red = new ColorInfo(ColorType.RED, this.imageMatrix);
-        this.blue = new ColorInfo(ColorType.BLUE, this.imageMatrix);
-        this.green = new ColorInfo(ColorType.GREEN, this.imageMatrix);
-        this.alpha = new ColorInfo(ColorType.ALPHA, this.imageMatrix);
-        this.gray = new ColorInfo(ColorType.GRAY, this.imageMatrix);
+    private defineColorsInfo(redArray: Array<Array<Color>>, blueArray: Array<Array<Color>>, greenArray: Array<Array<Color>>, alphaArray: Array<Array<Color>>, grayArray: Array<Array<Color>>) {
+        this.red = new ColorInfo(ColorType.RED, redArray);
+        this.blue = new ColorInfo(ColorType.BLUE, blueArray);
+        this.green = new ColorInfo(ColorType.GREEN, greenArray);
+        this.alpha = new ColorInfo(ColorType.ALPHA, alphaArray);
+        this.gray = new ColorInfo(ColorType.GRAY, grayArray);
     }
 
     private definePictureMatrix() {
+        var redArray = new Array<Array<Color>>(), blueArray = new Array<Array<Color>>(), greenArray = new Array<Array<Color>>(), alphaArray = new Array<Array<Color>>(), grayArray = new Array<Array<Color>>();
+        var red: number, blue: number, green: number, alpha: number; 
         var y = 0;
         var x = 0;
         var i = 0;
@@ -67,14 +68,25 @@ class Picture {
         while (i < this.imageData.data.length) {
             if (this.imageMatrix[y] === undefined) {
                 this.imageMatrix[y] = new Array<Array<number>>();
+                redArray[y] = new Array<Color>();
+                blueArray[y] = new Array<Color>();
+                greenArray[y] = new Array<Color>();
+                alphaArray[y] = new Array<Color>();
+                grayArray[y] = new Array<Color>();
             }
 
-            this.imageMatrix[y][x] = [
-                this.imageData.data[i],
-                this.imageData.data[i + 1],
-                this.imageData.data[i + 2],
-                this.imageData.data[i + 3]
-            ];
+            red = this.imageData.data[i];
+            blue = this.imageData.data[i + 1];
+            green = this.imageData.data[i + 2];
+            alpha = this.imageData.data[i + 3];
+
+            this.imageMatrix[y][x] = [red, blue, green, alpha];
+
+            redArray[y][x] = new Color(ColorType.RED, red);
+            blueArray[y][x] = new Color(ColorType.BLUE, blue);
+            greenArray[y][x] = new Color(ColorType.GREEN, green);
+            alphaArray[y][x] = new Color(ColorType.ALPHA, alpha);
+            grayArray[y][x] = new Color(ColorType.GRAY, (red + green + blue) / 3);
 
             x++;
             i += 4;
@@ -83,5 +95,7 @@ class Picture {
                 x = 0;
             }
         }
+
+        this.defineColorsInfo(redArray, blueArray, greenArray, alphaArray, grayArray);
     }
 }

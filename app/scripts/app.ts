@@ -27,9 +27,9 @@ class PDIPlayGroundApplication extends Application {
     }
 
     private createViews() {
-        this.views = [
+        this.views.concat([
             new StatisticsView()
-        ];
+        ]);
     }
 
     private createFragments() {
