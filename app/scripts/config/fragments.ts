@@ -5,113 +5,65 @@
 class Fragment {
     public name: String;
     public urlTemplate: String;
-    public htmlLoaded: String;
+    public $htmlLoaded: JQuery;
     public childs: Array<Fragment>;
+    private childsLoaded: number;
+    private eventManager: StaticEventManager;
 
     constructor(name: String, urlTemplate: String, childs: Array<Fragment> = new Array<Fragment>()) {
+        this.eventManager = new StaticEventManager();
         this.name = name;
         this.urlTemplate = urlTemplate;
+        this.$htmlLoaded = $();
         this.childs = childs;
+        this.childsLoaded = 0;
+        this.loadHtml();
+    }
+
+    public loadHtml() {
+        var self = this;
+
+        $.ajax({
+            method: "GET",
+            url: this.urlTemplate.toString(),
+            dataType: "html"
+        }).done(function (htmlTemplate) {
+            self.$htmlLoaded = $(htmlTemplate);
+            self.trigger("load");
+            self.checkChildrenLoading();
+        });
+    }
+
+    public checkChildrenLoading() {
+        var self = this;
+
+        this.childs.forEach(function (child) {
+            child.on("load", function () {
+                self.childsLoaded++;
+                if (self.childsLoaded === self.childs.length) {
+                    self.trigger("load-all");
+                }
+            });
+        });
+
+        if (this.childs.length === 0) {
+            this.trigger("load-all");
+        }
+    }
+
+    public joinHtmls() {
+        return this.$htmlLoaded;
     }
 
     public hasChilds(): boolean {
         return this.childs.length >= 0;
     }
-}
 
-class Fragments {
-    private fragments: Array<Fragment>;
-    private currentFragmentLoaded: number;
-    private numberOfFragments: number;
-    private static eventManager: EventManager;
-
-    constructor(fragments: Array<Fragment>) {
-        Fragments.eventManager = new EventManager();
-        this.currentFragmentLoaded = 0;
-        this.numberOfFragments = this.countFragments(fragments);
-        this.fragments = fragments;
-        this.loadFragments();
+    public on(type: String, action: Function) {
+        this.eventManager.on(type, action);
     }
 
-    private countFragments(fragments: Array<Fragment>): number {
-        var self = this;
-
-        return fragments.reduce(function (f1, f2) {
-            return f1 + 1 + (f2.hasChilds() ? self.countFragments(f2.childs) : 0);
-        }, 0);
-    }
-
-    private loadFragments() {
-        var self = this;
-
-        this.fragments.forEach(function (fragment) {
-            if ($("[data-fragment={0}]".format(fragment.name)).length) {
-                $("[data-fragment={0}]".format(fragment.name)).append(self.loadFragmentHtmlTemplate(fragment));
-            } else {
-                console.error("fragment without html bind");
-            }
-        });
-    }
-
-    private loadFragmentChilds(childs: Array<Fragment>) {
-        var self = this;
-
-        childs.forEach(function (fragment) {
-            if ($("[data-fragment={0}]".format(fragment.name)).length) {
-                $("[data-fragment={0}]".format(fragment.name)).append(self.loadFragmentHtmlTemplate(fragment));
-            } else {
-                console.error("fragment without html bind");
-            }
-        });
-    }
-
-    private loadFragmentHtmlTemplate(fragment: Fragment) {
-        var self = this;
-        var $template = $();
-        var $father = $();
-        var indexToReplace = 0;
-
-        var loadHtml = function (fragment: Fragment) {
-            $.ajax({
-                method: "GET",
-                url: fragment.urlTemplate.toString(),
-                dataType: "html"
-            }).done(function (template) {
-                $template = $(template);
-                $father
-                    .find("i[data-replace-id={0}]".format(indexToReplace))
-                    .replaceWith($template);
-
-                self.currentFragmentLoaded++;
-
-                if (self.currentFragmentLoaded === self.numberOfFragments) {
-                    Fragments.eventManager.triggerEvent("load-all");
-                }
-
-                if (fragment.childs.length) {
-                    self.loadFragmentChilds(fragment.childs);
-                }
-            }).fail(function () {
-                console.warn(arguments);
-            });
-        }
-
-        return function () {
-            var i = 0;
-
-            while ($(this).find("i[data-replace-id={0}]".format(i)).length) {
-                i++;
-            }
-
-            loadHtml(fragment);
-
-            indexToReplace = i;
-            $father = $(this);
-            return $("<i>").attr("data-replace-id", i);
-        };
-    }
-
-    public static on(type: String, action: Function) {
-        Fragments.eventManager.on(type, action);
+    public trigger(event: String) {
+        this.eventManager.trigger(event);
     }
 }

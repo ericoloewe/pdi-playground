@@ -3,11 +3,10 @@
 /// <reference path="../config/pages.ts" />
 
 class Application {
-    protected views: Array<View>;
-    protected fragments: Fragments;
-    protected pages: Pages;
+    public static own: Application;
+    protected pageManager: PageManager;
 
     constructor() {
-        this.views = new Array<View>();
+        this.pageManager = new PageManager();
     }
 }

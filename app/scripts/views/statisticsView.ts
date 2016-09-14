@@ -3,30 +3,20 @@
 "use strict";
 
 class StatisticsView extends View {
-    private $canvas: JQuery;
     private image: Picture;
 
-    public constructor() {
-        super($(".statistics"));
-        var self = this;
+    public constructor(fragment: Fragment, image: Picture) {
+        super(fragment);
 
-        this.$canvas = $("#PDI_CANVAS");
-
-        this.$canvas.ready(function () {
-            self.$canvas = $("#PDI_CANVAS");
-            self.image = new Picture(PDIPlayGroundApplication.imagePath, self.$canvas[0]);
-            self.bindEvents();
-        });
+        this.image = image;
+        this.bindEvents();
     }
 
     private bindEvents() {
-        var self = this;
-
         $(this.image.getHtmlImage()).on("load", function () {
-            self.defineStatistics();
-            self.openCharts();
-            self.render();
-            console.log(self);
+            this.defineStatistics();
+            this.openCharts();
+            this.render();
         });
     }
 

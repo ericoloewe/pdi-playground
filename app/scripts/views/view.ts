@@ -1,20 +1,24 @@
+/// <reference path="../config/fragments.ts" />
+
 "use strict";
 
 class View {
     protected scope: any;
     protected $scope: JQuery;
-    private $fragment: JQuery;
+    public fragment: Fragment;
 
-    public constructor($fragment: JQuery = $("body")) {
+    public constructor(fragment: Fragment) {
+        var self = this;
         this.scope = new Object();
-        this.$fragment = $fragment;
-        this.setScopes();
+        this.fragment = fragment;
+
+        this.fragment.on("load-all", function() {
+            self.setScopes();
+        });
     }
 
     public setScopes() {
-        var self = this;
-
-        this.$scope = this.$fragment.find("[data-scope]");
+        this.$scope = this.fragment.$htmlLoaded.find("[data-scope]");
         this.$scope.each(function () {
             $(this).attr("data-scope", $(this).html());
         });

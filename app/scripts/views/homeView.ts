@@ -7,31 +7,31 @@ class HomeView extends View {
     private $btnContinueWithoutLoad: JQuery;
     private $inputLoadAnimage: JQuery;
 
-    public constructor() {
-        super($(".home"));
+    public constructor(fragment: Fragment) {
+        super(fragment);
+        var self = this;
         
-        this.fetchElements();
-        this.bindEvents();
+        this.fragment.on("load-all", function () {
+            self.fetchElements();
+            self.bindEvents();
+        });        
     }
 
     private fetchElements() {
-        this.$btnLoadAnImage = $(".btn-load-an-image");
-        this.$btnContinueWithoutLoad = $(".btn-continue-without-load");
-        this.$inputLoadAnimage = $(".input-load-an-image");
+        this.$btnLoadAnImage = this.fragment.$htmlLoaded.find(".btn-load-an-image");
+        this.$btnContinueWithoutLoad = this.fragment.$htmlLoaded.find(".btn-continue-without-load");
+        this.$inputLoadAnimage = this.fragment.$htmlLoaded.find(".input-load-an-image");
     }
 
     private bindEvents() {
         var self = this;
 
-        console.log(this);
         this.$btnContinueWithoutLoad.click(function () {
-            console.log("here");
-            PDIPlayGroundApplication.own.initWithImage("media/img/Lenna.png");
+            PDIPlayGroundApplication.own.initImage("media/img/Lenna.png");
         });
 
         this.$inputLoadAnimage.change(function () {
-            console.log(this.files[0]);
-            PDIPlayGroundApplication.own.initWithImage(this.files[0].path);
+            PDIPlayGroundApplication.own.initImage(this.files[0].path);
         });
     }
 }
