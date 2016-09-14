@@ -5,7 +5,7 @@
 class TransformView extends View {
     private transform: Transform;
 
-    public constructor() {
-        super($(".transform"));
+    public constructor(fragment: Fragment) {
+        super(fragment);
     }
 }

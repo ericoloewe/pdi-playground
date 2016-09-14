@@ -5,7 +5,7 @@
 class FilterView extends View {
     private filter: Filter;
 
-    public constructor() {
-        super($(".filter"));
+    public constructor(fragment: Fragment) {
+        super(fragment);
     }
 }
