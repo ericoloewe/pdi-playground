@@ -18,9 +18,9 @@ class HomeView extends View {
     }
 
     private fetchElements() {
-        this.$btnLoadAnImage = this.fragment.$htmlLoaded.find(".btn-load-an-image");
-        this.$btnContinueWithoutLoad = this.fragment.$htmlLoaded.find(".btn-continue-without-load");
-        this.$inputLoadAnimage = this.fragment.$htmlLoaded.find(".input-load-an-image");
+        this.$btnLoadAnImage = this.fragment.$htmlLoadedWithChilds.find(".btn-load-an-image");
+        this.$btnContinueWithoutLoad = this.fragment.$htmlLoadedWithChilds.find(".btn-continue-without-load");
+        this.$inputLoadAnimage = this.fragment.$htmlLoadedWithChilds.find(".input-load-an-image");
     }
 
     private bindEvents() {

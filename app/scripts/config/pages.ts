@@ -15,6 +15,7 @@ class PageManager {
     constructor(pages: Array<Page> = new Array<Page>()) {
         this.pages = new Array<Page>();
         this.addAllPages(pages);
+        this.enableLinks();
     }
 
     public addAllPages(pages: Array<Page>) {
@@ -45,7 +46,7 @@ class PageManager {
 
     public activePageByName(name: String) {
         this.pages.forEach(function (page) {
-            if(page.view.fragment.name === name) {
+            if (page.view.fragment.name === name) {
                 this.activePage(page);
             }
         }, this);
@@ -56,12 +57,12 @@ class PageManager {
         var fatherFragment = page.view.fragment;
 
         fatherFragment.on("load-all", function () {
-            if ($(String.format("[data-page='{0}']", fatherFragment.name)).length) {
-                $(String.format("[data-page='{0}']", fatherFragment.name)).append(fatherFragment.joinHtmls());
+            if ($(self.buildSelectorPageFor(fatherFragment)).length) {
+                $(self.buildSelectorPageFor(fatherFragment)).append(fatherFragment.$htmlLoadedWithChilds);
             } else {
                 self.cleanPage();
                 $("[data-pages]").attr("data-actual-page", fatherFragment.name.toString());
-                $("[data-pages]").append(fatherFragment.joinHtmls());
+                $("[data-pages]").append(fatherFragment.$htmlLoadedWithChilds);
                 $("[data-pages]").addClass(fatherFragment.name.toString());
             }
         });
@@ -83,6 +84,25 @@ class PageManager {
 
         this.pages.forEach(function (page) {
             $("[data-pages]").removeClass(page.view.fragment.name.toString());
+        });
+    }
+
+    public refreshLinks() {
+        $("[data-page-link]").unbind("click");
+        this.enableLinks();
+    }
+
+    private buildSelectorPageFor(fragment: Fragment): String {
+        return String.format("[data-page='{0}']", fragment.name);
+    }
+
+    private enableLinks() {
+        var self = this;
+
+        $("[data-page-link]").click(function () {
+            var href = $(this).attr("href");
+            var pageName = href.substr(1, href.length);
+            self.activePageByName(pageName);
         });
     }
 }

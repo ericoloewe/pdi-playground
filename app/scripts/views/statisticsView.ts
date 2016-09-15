@@ -9,14 +9,32 @@ class StatisticsView extends View {
         super(fragment);
 
         this.image = image;
+        this.changeCanvasSize();
         this.bindEvents();
     }
 
+    public changeCanvasSize() {
+        var self = this;
+        var canvas = this.fragment.findChildByName("canvas");
+
+        this.fragment.on("load-all", function () {
+            var htmlCanvas = <HTMLCanvasElement> canvas.$htmlLoadedWithChilds[0];
+
+            htmlCanvas.width = 512;
+            htmlCanvas.height = 512;
+
+            $(self.image.getHtmlImage()).on("load", function () {
+                self.image.resizeCanvas();
+            });
+        });
+    }
+
     private bindEvents() {
+        var self = this;
         $(this.image.getHtmlImage()).on("load", function () {
-            this.defineStatistics();
-            this.openCharts();
-            this.render();
+            self.defineStatistics();
+            self.openCharts();
+            self.render();
         });
     }
 

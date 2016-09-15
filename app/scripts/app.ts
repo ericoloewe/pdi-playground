@@ -22,7 +22,10 @@ class PDIPlayGroundApplication extends Application {
         PDIPlayGroundApplication.canvas.on("load-all", function () {
             PDIPlayGroundApplication.actualPicture = new Picture(imagePath, PDIPlayGroundApplication.canvas);
             self.createPages();
+            self.pageManager.activePageByName("header");
             self.pageManager.activePageByName("statistics");
+            self.pageManager.activePageByName("canvas");
+            self.pageManager.refreshLinks();
         });
     }
 
@@ -40,7 +43,8 @@ class PDIPlayGroundApplication extends Application {
                 new Fragment("color-red", "views/statistics/color-red.html"),
                 new Fragment("color-green", "views/statistics/color-green.html"),
                 new Fragment("color-blue", "views/statistics/color-blue.html"),
-                new Fragment("color-alpha", "views/statistics/color-alpha.html")
+                new Fragment("color-alpha", "views/statistics/color-alpha.html"),
+                PDIPlayGroundApplication.canvas
             ]), PDIPlayGroundApplication.actualPicture))
         ]);
     }

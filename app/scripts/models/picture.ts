@@ -17,7 +17,7 @@ class Picture {
 
     constructor(src: string, canvas: Fragment) {
         this.canvas = canvas;
-        this.context = (<HTMLCanvasElement> this.canvas.$htmlLoaded[0]).getContext("2d");
+        this.context = (<HTMLCanvasElement>this.canvas.$htmlLoaded[0]).getContext("2d");
         this.image = new Image();
         this.image.src = src;
         this.imageMatrix = new Array<Array<Array<number>>>();
@@ -32,7 +32,7 @@ class Picture {
         var self = this;
 
         $(this.image).on("load", function () {
-            var canvas = <HTMLCanvasElement> self.canvas.$htmlLoaded[0];
+            var canvas = <HTMLCanvasElement>self.canvas.$htmlLoaded[0];
             self.context.drawImage(self.image, 0, 0);
 
             self.imageData = self.context.getImageData(0, 0, canvas.width, canvas.height);
@@ -45,6 +45,18 @@ class Picture {
 
             self.defineValues();
         });
+    }
+
+    public resizeCanvas() {
+        var self = this;
+
+        var canvas = <HTMLCanvasElement>self.canvas.$htmlLoaded[0];
+        self.width = self.canvas.$htmlLoaded.width();
+        self.height = self.canvas.$htmlLoaded.height();
+
+        self.context.drawImage(self.image, 0, 0, self.width, self.height);
+        self.context.clearRect(0, 0, self.width, self.height);
+        self.context.putImageData(self.imageData, 0, 0);
     }
 
     private defineValues() {
@@ -61,7 +73,7 @@ class Picture {
 
     private definePictureMatrix() {
         var redArray = new Array<Array<Color>>(), blueArray = new Array<Array<Color>>(), greenArray = new Array<Array<Color>>(), alphaArray = new Array<Array<Color>>(), grayArray = new Array<Array<Color>>();
-        var red: number, blue: number, green: number, alpha: number; 
+        var red: number, blue: number, green: number, alpha: number;
         var y = 0;
         var x = 0;
         var i = 0;
