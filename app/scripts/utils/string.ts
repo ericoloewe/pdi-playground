@@ -1,6 +1,7 @@
 interface String {
     format(...replacements: any[]): string;
     contains(value: string): boolean;
+    equals(value: string): boolean;
 }
 
 interface StringConstructor {
@@ -37,5 +38,11 @@ if (!String.format) {
 if (!String.prototype.contains) {
     String.prototype.contains = function (it) {
         return this.indexOf(it) != -1;
+    };
+};
+
+if (!String.prototype.equals) {
+    String.prototype.equals = function (str) {
+        return this.toString() === str;
     };
 };

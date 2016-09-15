@@ -61,6 +61,7 @@ class PageManager {
                 $(self.buildSelectorPageFor(fatherFragment)).append(fatherFragment.$htmlLoadedWithChilds);
             } else {
                 self.cleanPage();
+                self.activeLink($(self.buildSelectorLinkFor(fatherFragment)));
                 $("[data-pages]").attr("data-actual-page", fatherFragment.name.toString());
                 $("[data-pages]").append(fatherFragment.$htmlLoadedWithChilds);
                 $("[data-pages]").addClass(fatherFragment.name.toString());
@@ -96,13 +97,24 @@ class PageManager {
         return String.format("[data-page='{0}']", fragment.name);
     }
 
+    private buildSelectorLinkFor(fragment: Fragment): String {
+        return String.format("[data-page-link][href='#{0}']", fragment.name);
+    }
+
     private enableLinks() {
         var self = this;
 
         $("[data-page-link]").click(function () {
-            var href = $(this).attr("href");
+            var link = $(this);
+            self.activeLink(link);
+            var href = link.attr("href");
             var pageName = href.substr(1, href.length);
             self.activePageByName(pageName);
         });
+    }
+
+    private activeLink(link: JQuery) {
+        $("[data-page-link]").parent().removeClass("active");
+        link.parent().addClass("active");
     }
 }

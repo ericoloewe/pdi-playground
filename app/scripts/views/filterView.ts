@@ -5,7 +5,9 @@
 class FilterView extends View {
     private filter: Filter;
 
-    public constructor(fragment: Fragment) {
+    public constructor(fragment: Fragment, image: Picture) {
         super(fragment);
+
+        this.filter = new Filter(image);
     }
 }

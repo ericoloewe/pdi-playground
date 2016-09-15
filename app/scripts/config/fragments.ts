@@ -1,4 +1,5 @@
 /// <reference path="../utils/string.ts" />
+/// <reference path="../utils/jquery.ts" />
 /// <reference path="events.ts" />
 "use strict";
 
@@ -67,9 +68,15 @@ class Fragment {
     }
 
     public loadChildHtmlToOwnHtml(child: Fragment) {
-        this.$htmlLoadedWithChilds
-                .find(this.buildSelectorFor(child))
-                .append(child.$htmlLoaded);
+        if(child.$htmlLoaded.tagName().toLowerCase().equals("canvas")) {
+            this.$htmlLoadedWithChilds
+                    .find(this.buildSelectorFor(child))
+                    .append(child.$htmlLoaded.cloneCanvas());
+        } else {
+            this.$htmlLoadedWithChilds
+                    .find(this.buildSelectorFor(child))
+                    .append(child.$htmlLoaded.clone());
+        }
     }
 
     public findChildByName(childName: String) : Fragment {
