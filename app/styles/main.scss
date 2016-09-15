@@ -14,8 +14,14 @@
 @import "helpers/mixins";
 
 // ========================================================================
+// Base
+@import "base/base";
+
+// ========================================================================
 // Components
 @import "components/buttons";
+@import "components/canvas";
+@import "components/jumbotron";
 @import "components/pages";
 
 // ========================================================================
