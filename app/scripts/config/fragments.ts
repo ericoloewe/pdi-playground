@@ -6,6 +6,7 @@ class Fragment {
     public name: String;
     public urlTemplate: String;
     public $htmlLoaded: JQuery;
+    public $htmlLoadedWithChilds: JQuery;
     public childs: Array<Fragment>;
     private childsLoaded: number;
     private eventManager: StaticEventManager;
@@ -18,6 +19,19 @@ class Fragment {
         this.childs = childs;
         this.childsLoaded = 0;
         this.loadHtml();
+        this.bindEvents();
+    }
+
+    private bindEvents() {
+        var self = this;
+
+        this.on("load", function() {
+            self.childs.forEach(function(child) {
+                child.on("load", function() {
+                    self.loadChildHtmlToOwnHtml(child);
+                });
+            }, self);
+        });        
     }
 
     public loadHtml() {
@@ -29,8 +43,9 @@ class Fragment {
             dataType: "html"
         }).done(function (htmlTemplate) {
             self.$htmlLoaded = $(htmlTemplate);
-            self.trigger("load");
+            self.$htmlLoadedWithChilds = $(htmlTemplate);
             self.checkChildrenLoading();
+            self.trigger("load");
         });
     }
 
@@ -38,7 +53,7 @@ class Fragment {
         var self = this;
 
         this.childs.forEach(function (child) {
-            child.on("load", function () {
+            child.on("load-all", function () {
                 self.childsLoaded++;
                 if (self.childsLoaded === self.childs.length) {
                     self.trigger("load-all");
@@ -51,8 +66,22 @@ class Fragment {
         }
     }
 
-    public joinHtmls() {
-        return this.$htmlLoaded;
+    public loadChildHtmlToOwnHtml(child: Fragment) {
+        this.$htmlLoadedWithChilds
+                .find(this.buildSelectorFor(child))
+                .append(child.$htmlLoaded);
+    }
+
+    public findChildByName(childName: String) : Fragment {
+        var child = this.childs.filter(function(child) {
+            return child.name === childName;
+        })[0];
+
+        if(child === undefined) {
+            throw String.format("fragment no has child with name={0}", childName);            
+        }
+
+        return child;
     }
 
     public hasChilds(): boolean {
@@ -65,5 +94,9 @@ class Fragment {
 
     public trigger(event: String) {
         this.eventManager.trigger(event);
+    }
+
+    private buildSelectorFor(fragment: Fragment) {
+        return String.format("[data-fragment='{0}']", fragment.name);
     }
 }
