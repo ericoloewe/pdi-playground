@@ -1,3 +1,4 @@
+/// <reference path="../config/events.ts" />
 /// <reference path="colorInfo.ts" />
 "use strict";
 
@@ -14,8 +15,10 @@ class Picture {
     public gray: ColorInfo;
     public width: number;
     public height: number;
+    private eventManager: StaticEventManager;
 
     constructor(src: string, canvas: Fragment) {
+        this.eventManager = new StaticEventManager();
         this.canvas = canvas;
         this.context = (<HTMLCanvasElement>this.canvas.$htmlLoaded[0]).getContext("2d");
         this.image = new Image();
@@ -60,7 +63,11 @@ class Picture {
     }
 
     private defineValues() {
-        this.definePictureMatrix();
+        var self = this;
+        setTimeout(function() {
+            self.definePictureMatrix();
+            self.trigger("load-values");
+        }, 10);
     }
 
     private defineColorsInfo(redArray: Array<Array<Color>>, blueArray: Array<Array<Color>>, greenArray: Array<Array<Color>>, alphaArray: Array<Array<Color>>, grayArray: Array<Array<Color>>) {
@@ -110,5 +117,13 @@ class Picture {
         }
 
         this.defineColorsInfo(redArray, blueArray, greenArray, alphaArray, grayArray);
+    }
+
+    public on(type: String, action: Function) {
+        this.eventManager.on(type, action);
+    }
+
+    public trigger(event: String) {
+        this.eventManager.trigger(event);
     }
 }

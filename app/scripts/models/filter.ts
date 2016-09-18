@@ -2,7 +2,7 @@
 "use strict";
 
 class Filter {
-    private picture: Picture;
+    public picture: Picture;
 
     public constructor(picture: Picture) {
         this.picture = picture;

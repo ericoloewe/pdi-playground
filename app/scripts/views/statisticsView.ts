@@ -3,35 +3,46 @@
 "use strict";
 
 class StatisticsView extends View {
-    private image: Picture;
+    private picture: Picture;
+    private canvas: HTMLCanvasElement;
+    private $canvasSection: JQuery;
 
-    public constructor(fragment: Fragment, image: Picture) {
+    public constructor(fragment: Fragment, picture: Picture) {
         super(fragment);
 
-        this.image = image;
-        this.changeCanvasSize();
+        this.picture = picture;
         this.bindEvents();
+        this.loadCanvas();
     }
 
-    public changeCanvasSize() {
+    private loadCanvas() {
         var self = this;
-        var canvas = this.fragment.findChildByName("canvas");
+        this.fragment.on("load-all", function() {
+            self.$canvasSection = self.fragment.$htmlLoadedWithChilds.find("#STATISTICS_CANVAS_SECTION"); 
+            var canvas = <HTMLCanvasElement>document.createElement('canvas');
+            canvas.id = "STATISTICS_CANVAS";
+            canvas.className = "pdi-canvas";
+            canvas.width = 512;
+            canvas.height = 512;
 
-        this.fragment.on("load-all", function () {
-            var htmlCanvas = <HTMLCanvasElement> canvas.$htmlLoadedWithChilds[0];
+            var context = canvas.getContext("2d");
+            context.drawImage(self.picture.getHtmlImage(), 0, 0);
 
-            htmlCanvas.width = 512;
-            htmlCanvas.height = 512;
+            var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 
-            $(self.image.getHtmlImage()).on("load", function () {
-                self.image.resizeCanvas();
-            });
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.putImageData(imageData, 0, 0);
+
+            self.canvas = canvas;
+            self.$canvasSection.append(canvas);
+            console.log(self.$canvasSection);
         });
     }
 
     private bindEvents() {
         var self = this;
-        $(this.image.getHtmlImage()).on("load", function () {
+        
+        this.picture.on("load-values", function () {
             self.defineStatistics();
             self.openCharts();
             self.render();
@@ -41,45 +52,45 @@ class StatisticsView extends View {
     private defineStatistics() {
         this.scope.statistics = {
             gray: {
-                average: this.image.gray.statistics.average,
-                averageRightHalf: this.image.gray.statistics.averageRightHalf(this.image.gray.matrix),
-                medianLeftHalf: this.image.gray.statistics.medianLeftHalf(this.image.gray.matrix),
-                modeAboveMainDiagonal: this.image.gray.statistics.modeAboveMainDiagonal(this.image.gray.matrix),
-                varianceBelowMainDiagonal: this.image.gray.statistics.varianceBelowMainDiagonal(this.image.gray.matrix),
-                median: this.image.gray.statistics.median,
-                mode: this.image.gray.statistics.mode,
-                variance: this.image.gray.statistics.variance
+                average: this.picture.gray.statistics.average,
+                averageRightHalf: this.picture.gray.statistics.averageRightHalf(this.picture.gray.matrix),
+                medianLeftHalf: this.picture.gray.statistics.medianLeftHalf(this.picture.gray.matrix),
+                modeAboveMainDiagonal: this.picture.gray.statistics.modeAboveMainDiagonal(this.picture.gray.matrix),
+                varianceBelowMainDiagonal: this.picture.gray.statistics.varianceBelowMainDiagonal(this.picture.gray.matrix),
+                median: this.picture.gray.statistics.median,
+                mode: this.picture.gray.statistics.mode,
+                variance: this.picture.gray.statistics.variance
             },
             red: {
-                average: this.image.red.statistics.average,
-                median: this.image.red.statistics.median,
-                mode: this.image.red.statistics.mode,
-                variance: this.image.red.statistics.variance
+                average: this.picture.red.statistics.average,
+                median: this.picture.red.statistics.median,
+                mode: this.picture.red.statistics.mode,
+                variance: this.picture.red.statistics.variance
             },
             green: {
-                average: this.image.green.statistics.average,
-                median: this.image.green.statistics.median,
-                mode: this.image.green.statistics.mode,
-                variance: this.image.green.statistics.variance
+                average: this.picture.green.statistics.average,
+                median: this.picture.green.statistics.median,
+                mode: this.picture.green.statistics.mode,
+                variance: this.picture.green.statistics.variance
             },
             blue: {
-                average: this.image.blue.statistics.average,
-                median: this.image.blue.statistics.median,
-                mode: this.image.blue.statistics.mode,
-                variance: this.image.blue.statistics.variance
+                average: this.picture.blue.statistics.average,
+                median: this.picture.blue.statistics.median,
+                mode: this.picture.blue.statistics.mode,
+                variance: this.picture.blue.statistics.variance
             },
             alpha: {
-                average: this.image.alpha.statistics.average,
-                median: this.image.alpha.statistics.median,
-                mode: this.image.alpha.statistics.mode,
-                variance: this.image.alpha.statistics.variance
+                average: this.picture.alpha.statistics.average,
+                median: this.picture.alpha.statistics.median,
+                mode: this.picture.alpha.statistics.mode,
+                variance: this.picture.alpha.statistics.variance
             }
         };
     }
 
     private openCharts() {
         new Chartist.Line(".chart-gray-histogram", {
-            series: [this.image.gray.histogram]
+            series: [this.picture.gray.histogram]
         }, {
                 showArea: true,
                 showLine: false,
@@ -91,7 +102,7 @@ class StatisticsView extends View {
                 }
             });
         new Chartist.Line(".chart-red-histogram", {
-            series: [this.image.red.histogram]
+            series: [this.picture.red.histogram]
         }, {
                 showArea: true,
                 showLine: false,
@@ -103,7 +114,7 @@ class StatisticsView extends View {
                 }
             });
         new Chartist.Line(".chart-green-histogram", {
-            series: [this.image.green.histogram]
+            series: [this.picture.green.histogram]
         }, {
                 showArea: true,
                 showLine: false,
@@ -115,7 +126,7 @@ class StatisticsView extends View {
                 }
             });
         new Chartist.Line(".chart-blue-histogram", {
-            series: [this.image.blue.histogram]
+            series: [this.picture.blue.histogram]
         }, {
                 showArea: true,
                 showLine: false,
@@ -127,7 +138,7 @@ class StatisticsView extends View {
                 }
             });
         new Chartist.Line(".chart-alpha-histogram", {
-            series: [this.image.alpha.histogram]
+            series: [this.picture.alpha.histogram]
         }, {
                 showArea: true,
                 showLine: false,
