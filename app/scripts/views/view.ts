@@ -5,35 +5,51 @@
 class View {
     protected scope: any;
     protected $scope: JQuery;
+    private isRefreshingScope: Boolean;
     public fragment: Fragment;
 
     public constructor(fragment: Fragment) {
         var self = this;
         this.scope = new Object();
         this.fragment = fragment;
+        this.isRefreshingScope = false;
 
         this.fragment.on("load-all", function() {
-            self.setScopes();
+            setTimeout(function() {
+                self.setScopes();
+                setInterval(function() {
+                    if(!self.isRefreshingScope) {
+                        self.refreshScopes();
+                    }
+                }, 500);
+            }, 100);
         });
     }
 
     public setScopes() {
-        this.$scope = this.fragment.$htmlLoaded.find("[data-scope]");
+        this.$scope = this.fragment.$htmlLoadedWithChilds.find("[data-scope]");
+        console.log(this.$scope, this.fragment.$htmlLoadedWithChilds);
+        
         this.$scope.each(function () {
-            $(this).attr("data-scope", $(this).html());
+            var $element = $(this);
+            $element.attr("data-scope", $element.html());
         });
         this.render();
     }
 
     public render() {
-        this.refreshScopes();
         this.print(this.scope);
     }
 
     private refreshScopes() {
+        this.isRefreshingScope = true;
         this.$scope.each(function () {
-            $(this).html($(this).attr("data-scope"));
+            var $element = $(this);
+            var dataScope = $element.attr("data-scope");
+            $element.html(dataScope);
         });
+        this.render();
+        this.isRefreshingScope = false;
     }
 
     private print(data: any, parents?: string) {
@@ -47,7 +63,8 @@ class View {
             } else {
                 var selector = `{{${parents}.${d}}}`;
                 this.$scope.each(function () {
-                    $(this).html($(this).html().replace(selector, data[d]));
+                    var $element = $(this);
+                    $element.html($element.html().replace(selector, data[d]));
                 });
             }
         }

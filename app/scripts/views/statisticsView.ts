@@ -35,7 +35,6 @@ class StatisticsView extends View {
 
             self.canvas = canvas;
             self.$canvasSection.append(canvas);
-            console.log(self.$canvasSection);
         });
     }
 
