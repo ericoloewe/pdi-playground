@@ -4,7 +4,7 @@
 
 class Picture {
     public canvas: Fragment;
-    private context: any;
+    public context: any;
     private image: HTMLImageElement;
     public imageData: ImageData;
     private imageMatrix: Array<Array<Array<number>>>;
@@ -66,7 +66,7 @@ class Picture {
         var self = this;
         setTimeout(function() {
             self.definePictureMatrix();
-            self.trigger("load-values");
+            self.trigger("load-all-values");
         }, 10);
     }
 

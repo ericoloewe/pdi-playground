@@ -13,4 +13,17 @@ class CanvasUtil {
 
         ctx.drawImage(oc, 0, 0, width, height, 0, 0, canvas.width, canvas.height);
     }
+
+    public static applyImageDataToCanvas(imageData: ImageData, canvas: HTMLCanvasElement, oldWidth: number, oldHeight: number) {
+        var oc = document.createElement('canvas'),
+            octx = oc.getContext('2d');
+        var img = new Image();
+
+        oc.width = oldWidth;
+        oc.height = oldHeight;
+        octx.putImageData(imageData, 0, 0);
+        img.src = oc.toDataURL();
+
+        CanvasUtil.reziseImageCanvas(canvas, img, canvas.width, canvas.height)
+    }
 }

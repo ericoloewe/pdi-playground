@@ -11,6 +11,7 @@ class View {
     public constructor(fragment: Fragment) {
         var self = this;
         this.scope = new Object();
+        this.$scope = $();
         this.fragment = fragment;
         this.isRefreshingScope = false;
 
@@ -28,12 +29,12 @@ class View {
 
     public setScopes() {
         this.$scope = this.fragment.$htmlLoadedWithChilds.find("[data-scope]");
-        console.log(this.$scope, this.fragment.$htmlLoadedWithChilds);
         
         this.$scope.each(function () {
             var $element = $(this);
             $element.attr("data-scope", $element.html());
         });
+        
         this.render();
     }
 

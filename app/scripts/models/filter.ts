@@ -8,11 +8,13 @@ class Filter {
         this.picture = picture;
     }
 
-    public applyFilter(filter: Function) {
-        var data = new Array<number>();        
+    public applyFilter(filter: Function) : ImageData {
+        var newImageData = this.picture.imageData;        
 
         this.picture.imageData.data.forEach(function(color, index) {
-            data.push(filter(color));
+            newImageData.data[index] = filter(color, index);
         });
+
+        return newImageData;
     }
 }

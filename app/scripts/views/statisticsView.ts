@@ -41,7 +41,7 @@ class StatisticsView extends View {
     private bindEvents() {
         var self = this;
         
-        this.picture.on("load-values", function () {
+        this.picture.on("load-all-values", function () {
             self.defineStatistics();
             self.openCharts();
             self.render();
