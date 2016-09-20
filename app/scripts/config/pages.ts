@@ -62,9 +62,9 @@ class PageManager {
             } else {
                 self.cleanPage();
                 self.activeLink($(self.buildSelectorLinkFor(fatherFragment)));
-                $("[data-pages]").attr("data-actual-page", fatherFragment.name.toString());
+                $("[data-pages]").attr("data-actual-page", String.format("{0}-page", fatherFragment.name));
                 $("[data-pages]").append(fatherFragment.$htmlLoadedWithChilds);
-                $("[data-pages]").addClass(fatherFragment.name.toString());
+                $("[data-pages]").addClass(String.format("{0}-page", fatherFragment.name));
             }
         });
     }
