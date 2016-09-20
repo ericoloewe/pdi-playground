@@ -26,13 +26,13 @@ class Fragment {
     private bindEvents() {
         var self = this;
 
-        this.on("load", function() {
-            self.childs.forEach(function(child) {
-                child.on("load", function() {
+        this.on("load", function () {
+            self.childs.forEach(function (child) {
+                child.on("load", function () {
                     self.loadChildHtmlToOwnHtml(child);
                 });
             }, self);
-        });        
+        });
     }
 
     public loadHtml() {
@@ -44,7 +44,7 @@ class Fragment {
             dataType: "html"
         }).done(function (htmlTemplate) {
             self.$htmlLoaded = $(htmlTemplate);
-            self.$htmlLoadedWithChilds = $(htmlTemplate);
+            self.$htmlLoadedWithChilds = self.$htmlLoaded;
             self.checkChildrenLoading();
             self.trigger("load");
         });
@@ -68,24 +68,30 @@ class Fragment {
     }
 
     public loadChildHtmlToOwnHtml(child: Fragment) {
-        if(child.$htmlLoaded.tagName().toLowerCase().equals("canvas")) {
+        if (child.$htmlLoaded.tagName().toLowerCase().equals("canvas")) {
             this.$htmlLoadedWithChilds
-                    .find(this.buildSelectorFor(child))
-                    .append(child.$htmlLoaded.cloneCanvas());
+                .find(this.buildSelectorFor(child))
+                .append(child.$htmlLoaded.cloneCanvas());
         } else {
-            this.$htmlLoadedWithChilds
+            if (this.$htmlLoadedWithChilds.find(this.buildSelectorFor(child)).length) {
+                this.$htmlLoadedWithChilds
                     .find(this.buildSelectorFor(child))
                     .append(child.$htmlLoaded.clone());
+            } else {
+                this.$htmlLoadedWithChilds
+                    .filter(this.buildSelectorFor(child))
+                    .append(child.$htmlLoaded.clone());
+            }
         }
     }
 
-    public findChildByName(childName: String) : Fragment {
-        var child = this.childs.filter(function(child) {
+    public findChildByName(childName: String): Fragment {
+        var child = this.childs.filter(function (child) {
             return child.name === childName;
         })[0];
 
-        if(child === undefined) {
-            throw String.format("fragment no has child with name={0}", childName);            
+        if (child === undefined) {
+            throw String.format("fragment no has child with name={0}", childName);
         }
 
         return child;
