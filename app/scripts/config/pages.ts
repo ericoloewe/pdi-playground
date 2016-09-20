@@ -84,7 +84,7 @@ class PageManager {
         $("[data-pages]").attr("data-actual-page", "");
 
         this.pages.forEach(function (page) {
-            $("[data-pages]").removeClass(page.view.fragment.name.toString());
+            $("[data-pages]").removeClass(String.format("{0}-page", page.view.fragment.name));
         });
     }
 

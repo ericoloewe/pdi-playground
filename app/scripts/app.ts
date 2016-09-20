@@ -48,6 +48,7 @@ class PDIPlayGroundApplication extends Application {
                 new Fragment("color-alpha", "views/statistics/color-alpha.html")
             ]), PDIPlayGroundApplication.actualPicture)),
             new Page(new FilterView(new Fragment("filters", "views/filters.html", [
+                new Fragment("nav-filters", "views/filter/nav-filters.html")
             ]), PDIPlayGroundApplication.actualPicture))
         ]);
     }
