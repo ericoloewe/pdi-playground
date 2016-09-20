@@ -15,11 +15,11 @@ class View {
         this.fragment = fragment;
         this.isRefreshingScope = false;
 
-        this.fragment.on("load-all", function() {
-            setTimeout(function() {
+        this.fragment.on("load-all", function () {
+            setTimeout(function () {
                 self.setScopes();
-                setInterval(function() {
-                    if(!self.isRefreshingScope) {
+                setInterval(function () {
+                    if (!self.isRefreshingScope) {
                         self.refreshScopes();
                     }
                 }, 500);
@@ -29,12 +29,12 @@ class View {
 
     public setScopes() {
         this.$scope = this.fragment.$htmlLoadedWithChilds.find("[data-scope]");
-        
+
         this.$scope.each(function () {
             var $element = $(this);
             $element.attr("data-scope", $element.html());
         });
-        
+
         this.render();
     }
 

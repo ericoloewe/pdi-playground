@@ -17,8 +17,8 @@ class StatisticsView extends View {
 
     private loadCanvas() {
         var self = this;
-        this.fragment.on("load-all", function() {
-            self.$canvasSection = self.fragment.$htmlLoadedWithChilds.find("#STATISTICS_CANVAS_SECTION"); 
+        this.fragment.on("load-all", function () {
+            self.$canvasSection = self.fragment.$htmlLoadedWithChilds.find("#STATISTICS_CANVAS_SECTION");
             var canvas = <HTMLCanvasElement>document.createElement('canvas');
             canvas.id = "STATISTICS_CANVAS";
             canvas.className = "pdi-canvas";
@@ -34,7 +34,7 @@ class StatisticsView extends View {
 
     private bindEvents() {
         var self = this;
-        
+
         this.picture.on("load-all-values", function () {
             self.defineStatistics();
             self.openCharts();
