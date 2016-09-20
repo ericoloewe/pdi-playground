@@ -1,4 +1,5 @@
 /// <reference path="../config/events.ts" />
+/// <reference path="../utils/canvas.ts" />
 /// <reference path="colorInfo.ts" />
 "use strict";
 
@@ -48,18 +49,6 @@ class Picture {
 
             self.defineValues();
         });
-    }
-
-    public resizeCanvas() {
-        var self = this;
-
-        var canvas = <HTMLCanvasElement>self.canvas.$htmlLoaded[0];
-        self.width = self.canvas.$htmlLoaded.width();
-        self.height = self.canvas.$htmlLoaded.height();
-
-        self.context.drawImage(self.image, 0, 0, self.width, self.height);
-        self.context.clearRect(0, 0, self.width, self.height);
-        self.context.putImageData(self.imageData, 0, 0);
     }
 
     private defineValues() {

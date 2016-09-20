@@ -2,19 +2,11 @@
 "use strict";
 
 class Filter {
-    public picture: Picture;
+    public name: String;
+    public method: Function;
 
-    public constructor(picture: Picture) {
-        this.picture = picture;
-    }
-
-    public applyFilter(filter: Function) : ImageData {
-        var newImageData = this.picture.imageData;        
-
-        this.picture.imageData.data.forEach(function(color, index) {
-            newImageData.data[index] = filter(color, index);
-        });
-
-        return newImageData;
+    public constructor(name: String, method: Function) {
+        this.name = name;
+        this.method = method;
     }
 }

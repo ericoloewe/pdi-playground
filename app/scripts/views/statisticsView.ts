@@ -25,13 +25,7 @@ class StatisticsView extends View {
             canvas.width = 512;
             canvas.height = 512;
 
-            var context = canvas.getContext("2d");
-            context.drawImage(self.picture.getHtmlImage(), 0, 0);
-
-            var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            context.putImageData(imageData, 0, 0);
+            CanvasUtil.reziseImageCanvas(canvas, self.picture.getHtmlImage(), canvas.width, canvas.height);
 
             self.canvas = canvas;
             self.$canvasSection.append(canvas);
