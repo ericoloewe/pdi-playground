@@ -1,6 +1,8 @@
+/// <reference path="references/jquery/main.ts" />
 /// <reference path="config/application.ts" />
 /// <reference path="views/homeView.ts" />
 /// <reference path="views/statisticsView.ts" />
+/// <reference path="views/filterView.ts" />
 /// <reference path="views/headerView.ts" />
 
 class PDIPlayGroundApplication extends Application {
