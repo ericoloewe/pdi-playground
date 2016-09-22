@@ -1,4 +1,6 @@
 /// <reference path="../models/picture.ts" />
+/// <reference path="../models/filter.ts" />
+/// <reference path="../models/filterInfo.ts" />
 /// <reference path="../utils/canvas.ts" />
 /// <reference path="view.ts" />
 "use strict";
@@ -17,7 +19,6 @@ class FilterView extends View {
         this.canvasHeight = 650;
         this.canvasWidth = 650;
         this.loadFilters();
-        this.applyFilters();
         this.loadCanvas();
     }
 
@@ -38,11 +39,30 @@ class FilterView extends View {
         });
     }
 
-    private applyFilters() {
+    private loadFiltersAtScreen() {
         var self = this;
-        this.filterManager.picture.on("load-all-values", function () {
-            self.filterManager.applyFilterByNameToCanvas("BLUE", self.canvas);
-        });
+        var filterList = this.fragment.$htmlLoadedWithChilds.find(".filters-list");
+
+        filterList.append(this.filterManager.getFilters().map(function (filter) {
+            return $("<li>")
+                .append(self.createCanvasForFilter(filter, 100, 100))
+                .attr("data-filter-name", filter.name.toString())
+                .click(function (e) {
+                    var $canvas = $(this);
+                    self.filterManager.restoreCanvasImage(self.canvas);
+                    self.filterManager.applyFilterByNameToCanvas($canvas.data("filter-name"), self.canvas);
+                    return e.preventDefault();
+                });
+        }));
+    }
+
+    private createCanvasForFilter(filter: Filter, width: number, height: number): HTMLCanvasElement {
+        var canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+
+        this.filterManager.applyFilterByNameToCanvas(filter.name, canvas);
+        return canvas;
     }
 
     private loadFilters() {
@@ -54,47 +74,89 @@ class FilterView extends View {
             var median = picture.gray.statistics.median;
             var mode = picture.gray.statistics.mode;
 
-            self.filterManager.addFilter(new Filter("BLUE", function (color: number, index: number) {
-                if (color >= 128) {
-                    color = average;
-                }
-
-                return color;
+            self.filterManager.addFilter(new Filter("ORIGINAL", function (info: FilterInfo) {
+                return info.color;
             }));
 
-            self.filterManager.addFilter(new Filter("CONTRAST", function (color: number, index: number) {
-                if (color >= 128) {
-                    color = mode;
+            self.filterManager.addFilter(new Filter("BLUE-LIGHT", function (info: FilterInfo) {
+                if (info.color >= 128) {
+                    info.color = average;
                 }
 
-                return color;
+                return info.color;
             }));
 
-            self.filterManager.addFilter(new Filter("CONTRAST-2", function (color: number, index: number) {
-                if (color >= 128) {
-                    color = median;
+            self.filterManager.addFilter(new Filter("CONTRAST", function (info: FilterInfo) {
+                if (info.color >= 128) {
+                    info.color = mode;
                 }
 
-                return color;
+                return info.color;
             }));
 
-            self.filterManager.addFilter(new Filter("HOT", function (color: number, index: number) {
-                if (color < average) {
-                    color = 0;
+            self.filterManager.addFilter(new Filter("CONTRAST-2", function (info: FilterInfo) {
+                if (info.color >= 128) {
+                    info.color = median;
                 }
 
-                return color;
+                return info.color;
             }));
 
-            self.filterManager.addFilter(new Filter("HOT-2", function (color: number, index: number) {
-                if (color < average) {
-                    color = 0;
-                } else if (color > median) {
-                    color = 255;
+            self.filterManager.addFilter(new Filter("HOT", function (info: FilterInfo) {
+                if (info.color < average) {
+                    info.color = 0;
                 }
 
-                return color;
+                return info.color;
             }));
+
+            self.filterManager.addFilter(new Filter("HOT-2", function (info: FilterInfo) {
+                if (info.color < average) {
+                    info.color = 0;
+                } else if (info.color > median) {
+                    info.color = 255;
+                }
+
+                return info.color;
+            }));
+
+            var hotFilter = self.filterManager.getFilterByName("HOT");
+
+            self.filterManager.addFilter(new Filter("GRAY", function (info: FilterInfo) {
+                return (info.red + info.green + info.blue) / 3;
+            }, FilterType.RGB));
+
+            self.filterManager.addFilter(new Filter("RED", function (info: FilterInfo) {
+                return info.red;
+            }, FilterType.RGB));
+
+            self.filterManager.addFilter(new Filter("BLUE", function (info: FilterInfo) {
+                return info.blue;
+            }, FilterType.RGB));
+
+            self.filterManager.addFilter(new Filter("GREEN", function (info: FilterInfo) {
+                return info.green;
+            }, FilterType.RGB));
+
+            self.filterManager.addFilter(new Filter("ALPHA", function (info: FilterInfo) {
+                return info.alpha;
+            }, FilterType.RGB));
+
+            self.filterManager.addFilter(new Filter("HALF-GREEN", function (info: FilterInfo) {
+                if(info.x < info.y) {
+                    return info.green;
+                }
+                return hotFilter.method(info);
+            }, FilterType.RGB));
+
+            self.filterManager.addFilter(new Filter("HALF-GREEN-2", function (info: FilterInfo) {
+                if(info.x > info.y) {
+                    return info.green;
+                }
+                return hotFilter.method(info);
+            }, FilterType.RGB));
+
+            self.loadFiltersAtScreen();
         });
     }
 }

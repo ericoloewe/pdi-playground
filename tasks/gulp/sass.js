@@ -11,15 +11,14 @@ var paths = {
         sass: "app/styles",
         css: "app/styles",
         image: "app/media/img",
-        font: "app/fonts",
-        // debug: true,
+        font: "app/fonts"
     }
 };
 
 gulp.task("sass", function () {
     return gulp.src(paths.compile)
         .pipe(compass(paths.compass))
-        .on("error", function (error) {
+        .on("error", function () {
             console.log(arguments);
         })
         .pipe(rename({ suffix: ".min" }))

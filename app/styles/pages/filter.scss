@@ -2,10 +2,26 @@
 // FILTER
 // ========================================================================
 
-.filter-page {
+.filters-page {
     .nav-filters {
+        position: fixed;
+        height: 100%;
+        top: 0;
+        left: 0;
+        padding-top: 51px;
+        background: #FFF;
+        @include box-shadow(0 1px 1px 0 rgba(0,0,0,.06),0 2px 5px 0 rgba(0,0,0,.2));
+        overflow-x: hidden;
+        overflow-y: auto;
+
         .filters-list {
-            
+            padding: 0;
+            list-style: none;
+
+            > li {
+                display: block;
+                padding: 10px 20px;
+            }
         }
     }
 }
