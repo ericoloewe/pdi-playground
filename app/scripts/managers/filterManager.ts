@@ -1,7 +1,7 @@
 /// <reference path="../models/picture.ts" />
 /// <reference path="../models/filter.ts" />
 /// <reference path="../models/filterInfo.ts" />
-/// <reference path="string.ts" />
+/// <reference path="../utils/string.ts" />
 "use strict";
 
 class FilterManager {
