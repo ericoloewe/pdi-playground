@@ -3,6 +3,7 @@
 /// <reference path="views/homeView.ts" />
 /// <reference path="views/statisticsView.ts" />
 /// <reference path="views/filterView.ts" />
+/// <reference path="views/transformView.ts" />
 /// <reference path="views/headerView.ts" />
 
 class PDIPlayGroundApplication extends Application {
@@ -51,6 +52,8 @@ class PDIPlayGroundApplication extends Application {
             ]), PDIPlayGroundApplication.actualPicture)),
             new Page(new FilterView(new Fragment("filters", "views/filters.html", [
                 new Fragment("nav-filters", "views/filter/nav-filters.html")
+            ]), PDIPlayGroundApplication.actualPicture)),
+            new Page(new TransformView(new Fragment("transforms", "views/transforms.html", [
             ]), PDIPlayGroundApplication.actualPicture))
         ]);
     }
