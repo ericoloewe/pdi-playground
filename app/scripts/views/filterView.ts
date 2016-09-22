@@ -2,6 +2,7 @@
 /// <reference path="../models/filter.ts" />
 /// <reference path="../models/filterInfo.ts" />
 /// <reference path="../utils/canvas.ts" />
+/// <reference path="../utils/filterManager.ts" />
 /// <reference path="view.ts" />
 "use strict";
 
@@ -143,14 +144,14 @@ class FilterView extends View {
             }, FilterType.RGB));
 
             self.filterManager.addFilter(new Filter("HALF-GREEN", function (info: FilterInfo) {
-                if(info.x < info.y) {
+                if (info.x < info.y) {
                     return info.green;
                 }
                 return hotFilter.method(info);
             }, FilterType.RGB));
 
             self.filterManager.addFilter(new Filter("HALF-GREEN-2", function (info: FilterInfo) {
-                if(info.x > info.y) {
+                if (info.x > info.y) {
                     return info.green;
                 }
                 return hotFilter.method(info);

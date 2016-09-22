@@ -1,6 +1,7 @@
 /// <reference path="../models/picture.ts" />
 /// <reference path="../models/filter.ts" />
 /// <reference path="../models/filterInfo.ts" />
+/// <reference path="string.ts" />
 "use strict";
 
 class FilterManager {
@@ -79,7 +80,7 @@ class FilterManager {
 
         return newImageData;
     }
-    
+
     private applyGeneralFilter(filter: Filter, imageData: ImageData, originalImageData: ImageData) {
         for (var i = 0; i < originalImageData.data.length; i++) {
             var color = originalImageData.data[i];
