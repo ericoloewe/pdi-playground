@@ -4,7 +4,7 @@
 "use strict";
 
 class Picture {
-    public canvas: Fragment;
+    public canvas: HTMLCanvasElement;
     public context: any;
     private image: HTMLImageElement;
     public imageData: ImageData;
@@ -18,10 +18,10 @@ class Picture {
     public height: number;
     private eventManager: StaticEventManager;
 
-    constructor(src: string, canvas: Fragment) {
+    constructor(src: string, canvas: HTMLCanvasElement) {
         this.eventManager = new StaticEventManager();
         this.canvas = canvas;
-        this.context = (<HTMLCanvasElement>this.canvas.$htmlLoaded[0]).getContext("2d");
+        this.context = this.canvas.getContext("2d");
         this.image = new Image();
         this.image.src = src;
         this.imageMatrix = new Array<Array<Array<number>>>();
@@ -36,16 +36,16 @@ class Picture {
         var self = this;
 
         $(this.image).on("load", function () {
-            var canvas = <HTMLCanvasElement>self.canvas.$htmlLoaded[0];
-            self.context.drawImage(self.image, 0, 0);
-
-            self.imageData = self.context.getImageData(0, 0, canvas.width, canvas.height);
-
-            self.context.clearRect(0, 0, canvas.width, canvas.height);
-            self.context.putImageData(self.imageData, 0, 0);
-
+            var canvas = <HTMLCanvasElement>self.canvas;
             self.width = self.image.width;
             self.height = self.image.height;
+            canvas.width = self.width;
+            canvas.height = self.height;
+
+            self.context.drawImage(self.image, 0, 0);
+            self.imageData = self.context.getImageData(0, 0, canvas.width, canvas.height);
+            self.context.clearRect(0, 0, canvas.width, canvas.height);
+            self.context.putImageData(self.imageData, 0, 0);
 
             self.defineValues();
         });

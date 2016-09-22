@@ -10,27 +10,24 @@ class PDIPlayGroundApplication extends Application {
     public static own: PDIPlayGroundApplication;
     public static imagePath: string;
     public static actualPicture: Picture;
-    public static canvas: Fragment;
+    public static canvas: HTMLCanvasElement;
 
     constructor() {
         super();
         this.createInitialPages();
-        PDIPlayGroundApplication.canvas = new Fragment("canvas", "views/shared/canvas.html");
+        PDIPlayGroundApplication.canvas = document.createElement('canvas');
     }
 
     public initImage(imagePath: string) {
         var self = this;
         PDIPlayGroundApplication.imagePath = imagePath;
-
-        PDIPlayGroundApplication.canvas.on("load-all", function () {
-            PDIPlayGroundApplication.actualPicture = new Picture(imagePath, PDIPlayGroundApplication.canvas);
-            $(PDIPlayGroundApplication.actualPicture.getHtmlImage()).on("load", function () {
-                self.createPages();
-                self.pageManager.activePageByName("header");
-                self.pageManager.activePageByName("statistics");
-                self.pageManager.activePageByName("canvas");
-                self.pageManager.refreshLinks();
-            });
+        PDIPlayGroundApplication.actualPicture = new Picture(imagePath, PDIPlayGroundApplication.canvas);
+        $(PDIPlayGroundApplication.actualPicture.getHtmlImage()).on("load", function () {
+            self.createPages();
+            self.pageManager.activePageByName("header");
+            self.pageManager.activePageByName("statistics");
+            self.pageManager.activePageByName("canvas");
+            self.pageManager.refreshLinks();
         });
     }
 
