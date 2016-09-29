@@ -3,6 +3,7 @@
 /// <reference path="../models/filterInfo.ts" />
 /// <reference path="../utils/canvas.ts" />
 /// <reference path="../managers/filterManager.ts" />
+/// <reference path="../references/jquery/main.ts" />
 /// <reference path="view.ts" />
 "use strict";
 

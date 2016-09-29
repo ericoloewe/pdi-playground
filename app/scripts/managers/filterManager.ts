@@ -54,9 +54,6 @@ class FilterManager {
     private applyFilterToImageData(filter: Filter): ImageData {
         var oldImageData = this.picture.imageData;
         var newImageData = this.picture.context.createImageData(this.picture.width, this.picture.height);
-        var red: number, blue: number, green: number, alpha: number;
-        var x = 0;
-        var y = 0;
         newImageData.data = oldImageData.data;
 
         switch (filter.type) {
