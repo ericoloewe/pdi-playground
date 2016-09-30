@@ -51,7 +51,11 @@ class PDIPlayGroundApplication extends Application {
                 new Fragment("nav-filters", "views/filter/nav-filters.html")
             ]), PDIPlayGroundApplication.actualPicture)),
             new Page(new TransformView(new Fragment("transforms", "views/transforms.html", [
-                new Fragment("nav-transforms", "views/transform/nav-transforms.html")
+                new Fragment("nav-transforms", "views/transform/nav.html"),
+                new Fragment("panel-transforms", "views/transform/panel.html", [
+                    new Fragment("translation", "views/transform/panel/translation.html"),
+                    new Fragment("rotation", "views/transform/panel/rotation.html")
+                ]),
             ]), PDIPlayGroundApplication.actualPicture))
         ]);
     }

@@ -13,21 +13,40 @@ class TransformView extends View {
 
     public constructor(fragment: Fragment, picture: Picture) {
         super(fragment);
+        var self = this;
+
         this.transformManager = new TransformManager(picture);
         this.canvasHeight = 650;
         this.canvasWidth = 650;
-        this.loadTransforms();
-        this.loadCanvas();
+
+        this.fragment.on("load-all", function () {
+            self.loadTransforms();
+            self.loadCanvas();
+            self.bindEvents();
+        });
+    }
+
+    private bindEvents() {
+        var self = this;
+        var $thread:number;
+        var $panelFragment = this.fragment.$htmlLoadedWithChilds.siblings(".panel-transforms");
+
+        $panelFragment.find(".panel-translation .form-pos-x, .panel-translation .form-pos-y").on("change keyup", function () {
+            var x = $panelFragment.find(".panel-translation .form-pos-x").val();
+            var y = $panelFragment.find(".panel-translation .form-pos-y").val();
+
+            clearTimeout($thread);
+            $thread = setTimeout(function () {
+                self.translateTo(x, y);
+            });
+        });
     }
 
     private loadCanvas() {
-        var self = this;
-        this.fragment.on("load-all", function () {
-            self.$canvasSection = self.fragment.$htmlLoadedWithChilds.find("#TRANSFORM_CANVAS_SECTION");
-            var canvas = CanvasUtil.createCustomCanvas(self.canvasWidth, self.canvasHeight, self.transformManager.picture.getHtmlImage(), "TRANSFORM_CANVAS", "pdi-canvas");
-            self.canvas = canvas;
-            self.$canvasSection.append(canvas);
-        });
+        this.$canvasSection = this.fragment.$htmlLoadedWithChilds.find("#TRANSFORM_CANVAS_SECTION");
+        var canvas = CanvasUtil.createCustomCanvas(this.canvasWidth, this.canvasHeight, this.transformManager.picture.getHtmlImage(), "TRANSFORM_CANVAS", "pdi-canvas");
+        this.canvas = canvas;
+        this.$canvasSection.append(canvas);
     }
 
     private loadTransforms() {
@@ -47,6 +66,9 @@ class TransformView extends View {
 
                 return newIndex * 4 + info.colorType;
             }, $("<i>").addClass("glyphicon glyphicon-move")));
+            self.transformManager.addTransform(new Transform("ROTACAO", function (info: TransformInfo) {
+
+            }, $("<i>").addClass("glyphicon").append("∢")));
 
             self.loadTranformsAtScreen();
         });
@@ -72,7 +94,19 @@ class TransformView extends View {
     }
 
     private openPanelByName(name: String) {
+        this.disableAllPanels();
+        this.fragment.$htmlLoadedWithChilds.find(String.format("[data-panel-name={0}]", name)).addClass("active");
+    }
+
+    private disableAllPanels() {
+        this.fragment.$htmlLoadedWithChilds.find("[data-panel-name]").removeClass("active");
+    }
+
+    private translateTo(x: number, y: number) {
+        x = Math.round(x);
+        y = Math.round(y);
+
         this.transformManager.restoreCanvasImage(this.canvas);
-        this.transformManager.applyTransformByNameToCanvas(name, this.canvas, { translateX: 0, translateY: 100 });
+        this.transformManager.applyTransformByNameToCanvas("TRANSLACAO", this.canvas, { translateX: x, translateY: y });
     }
 }

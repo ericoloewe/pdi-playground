@@ -26,9 +26,9 @@ class Fragment {
     private bindEvents() {
         var self = this;
 
-        this.on("load", function () {
+        this.on("load-all", function () {
             self.childs.forEach(function (child) {
-                child.on("load", function () {
+                child.on("load-all", function () {
                     self.loadChildHtmlToOwnHtml(child);
                 });
             }, self);

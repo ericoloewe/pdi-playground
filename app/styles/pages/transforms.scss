@@ -24,4 +24,28 @@
             }
         }
     }
+
+    .panel-transforms {
+        position: fixed;
+        min-width: 300px;
+        min-height: 300px;
+        top: 100px;
+        right: 50px;
+
+        .panel {
+            display: none;
+
+            &.active {
+                display: block;
+            }
+
+            &-translation {
+                max-width: 300px;
+            }
+
+            &-rotation {
+                max-width: 300px;
+            }
+        }
+    }
 }
