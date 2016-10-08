@@ -48,6 +48,12 @@ class TransformView extends View {
             self.rotateTo(formData.get("posX"), formData.get("posY"), formData.get("angle"));
             return e.preventDefault();
         });
+
+        $panelFragment.find(".panel-enlarge form").on("submit", function (e) {
+            var formData: any = new FormData(this);
+            self.enlargeTo(formData.get("percent"));
+            return e.preventDefault();
+        });
     }
 
     private loadCanvas() {
@@ -77,19 +83,28 @@ class TransformView extends View {
                 var pos2 = info.y - info.params.centerY;
                 var newPosX = info.params.centerX - pos1 * info.params.cos + pos2 * info.params.sin;
                 var newPosY = info.params.centerX - pos1 * info.params.sin - pos2 * info.params.cos;
-                // var newPosX = (info.x * info.params.cos) - (info.y * info.params.sin); 
-                // var newPosY = (info.y * info.params.cos) + (info.x * info.params.sin);
 
                 newPosX = Math.round(newPosX);
                 newPosY = Math.round(newPosY);
 
                 var newIndex = newPosX + newPosY * info.matrixWidth;
-                var maxPosX = info.matrixWidth;
 
                 if (newPosX >= 0 && newPosX < info.matrixWidth && newPosY >= 0 && newPosY < info.matrixHeight) {
                     return newIndex * 4 + info.colorType;
                 }
             }, $("<i>").addClass("glyphicon").append("∢")));
+
+            self.transformManager.addTransform(new Transform("AMPLIACAO", function (info: TransformInfo) {
+                var percent = info.params.percent;
+                var newPosX = info.x / percent;
+                var newPosY = info.y / percent;
+
+                var newIndex = newPosX + newPosY * info.matrixWidth * percent;
+
+                if (newPosX >= 0 && newPosX < info.matrixWidth * percent && newPosY >= 0 && newPosY < info.matrixHeight * percent) {
+                    return newIndex * 4 + info.colorType;
+                }
+            }, $("<i>").addClass("glyphicon glyphicon-resize-full")));
 
             self.loadTranformsAtScreen();
         });
@@ -140,9 +155,16 @@ class TransformView extends View {
         this.transformManager.applyTransformByNameToCanvas("ROTACAO", this.canvas, {
             centerX: x,
             centerY: y,
-            angle:angle,
+            angle: angle,
             sin: Math.sin(angle),
             cos: Math.cos(angle)
         });
+    }
+
+    private enlargeTo(percent: number) {
+        percent = Math.round(percent);
+
+        this.transformManager.restoreCanvasImage(this.canvas);
+        this.transformManager.applyTransformByNameToCanvas("AMPLIACAO", this.canvas, { percent: percent });
     }
 }
