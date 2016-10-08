@@ -4,6 +4,7 @@ interface Math {
     mode(numbers: Array<number>): number;
     variance(numbers: Array<number>): number;
     histogram(max: number, numbers: Array<number>): Array<number>;
+    toRadians(number: number): number;
 }
 
 Math.average = function (numbers: Array<number>) {
@@ -42,4 +43,8 @@ Math.histogram = function (max: number, numbers: Array<number>) {
     });
 
     return histogram;
+}
+
+Math.toRadians = function (numbers: number) {
+    return numbers * Math.PI / 180;
 }

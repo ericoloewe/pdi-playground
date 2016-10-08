@@ -28,10 +28,10 @@ class TransformView extends View {
 
     private bindEvents() {
         var self = this;
-        var $thread:number;
+        var $thread: number;
         var $panelFragment = this.fragment.$htmlLoadedWithChilds.siblings(".panel-transforms");
 
-        $panelFragment.find(".panel-translation .form-pos-x, .panel-translation .form-pos-y").on("change keyup", function () {
+        $panelFragment.find(".panel-translation .form-pos-x, .panel-translation .form-pos-y").on("change keyup", function (e) {
             var x = $panelFragment.find(".panel-translation .form-pos-x").val();
             var y = $panelFragment.find(".panel-translation .form-pos-y").val();
 
@@ -39,6 +39,14 @@ class TransformView extends View {
             $thread = setTimeout(function () {
                 self.translateTo(x, y);
             });
+
+            return e.preventDefault();
+        });
+
+        $panelFragment.find(".panel-rotation form").on("submit", function (e) {
+            var formData: any = new FormData(this);
+            self.rotateTo(formData.get("posX"), formData.get("posY"), formData.get("angle"));
+            return e.preventDefault();
         });
     }
 
@@ -58,16 +66,29 @@ class TransformView extends View {
                 var posY = info.y + info.params.translateY;
                 var posX = info.x + info.params.translateX;
                 var newIndex = posX + posY * info.matrixWidth;
+
+                if (posX >= 0 && posX < info.matrixWidth && posY >= 0 && posY < info.matrixHeight) {
+                    return newIndex * 4 + info.colorType;
+                }
+            }, $("<i>").addClass("glyphicon glyphicon-move")));
+
+            self.transformManager.addTransform(new Transform("ROTACAO", function (info: TransformInfo) {
+                var pos1 = info.x - info.params.centerX;
+                var pos2 = info.y - info.params.centerY;
+                var newPosX = info.params.centerX - pos1 * info.params.cos + pos2 * info.params.sin;
+                var newPosY = info.params.centerX - pos1 * info.params.sin - pos2 * info.params.cos;
+                // var newPosX = (info.x * info.params.cos) - (info.y * info.params.sin); 
+                // var newPosY = (info.y * info.params.cos) + (info.x * info.params.sin);
+
+                newPosX = Math.round(newPosX);
+                newPosY = Math.round(newPosY);
+
+                var newIndex = newPosX + newPosY * info.matrixWidth;
                 var maxPosX = info.matrixWidth;
 
-                if (posX >= maxPosX || posX < 0) {
-                    return undefined;
+                if (newPosX >= 0 && newPosX < info.matrixWidth && newPosY >= 0 && newPosY < info.matrixHeight) {
+                    return newIndex * 4 + info.colorType;
                 }
-
-                return newIndex * 4 + info.colorType;
-            }, $("<i>").addClass("glyphicon glyphicon-move")));
-            self.transformManager.addTransform(new Transform("ROTACAO", function (info: TransformInfo) {
-
             }, $("<i>").addClass("glyphicon").append("∢")));
 
             self.loadTranformsAtScreen();
@@ -108,5 +129,20 @@ class TransformView extends View {
 
         this.transformManager.restoreCanvasImage(this.canvas);
         this.transformManager.applyTransformByNameToCanvas("TRANSLACAO", this.canvas, { translateX: x, translateY: y });
+    }
+
+    private rotateTo(x: number, y: number, angle: number) {
+        x = Math.round(x);
+        y = Math.round(y);
+        angle = Math.toRadians(Math.round(angle));
+
+        this.transformManager.restoreCanvasImage(this.canvas);
+        this.transformManager.applyTransformByNameToCanvas("ROTACAO", this.canvas, {
+            centerX: x,
+            centerY: y,
+            angle:angle,
+            sin: Math.sin(angle),
+            cos: Math.cos(angle)
+        });
     }
 }
