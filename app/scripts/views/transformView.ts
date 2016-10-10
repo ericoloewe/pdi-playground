@@ -54,6 +54,12 @@ class TransformView extends View {
             self.enlargeTo(formData.get("percent"));
             return e.preventDefault();
         });
+
+        $panelFragment.find(".panel-reduction form").on("submit", function (e) {
+            var formData: any = new FormData(this);
+            self.reduceTo(formData.get("percent"));
+            return e.preventDefault();
+        });
     }
 
     private loadCanvas() {
@@ -105,6 +111,18 @@ class TransformView extends View {
                     return newIndex * 4 + info.colorType;
                 }
             }, $("<i>").addClass("glyphicon glyphicon-resize-full")));
+
+            self.transformManager.addTransform(new Transform("REDUCAO", function (info: TransformInfo) {
+                var percent = info.params.percent;
+                var newPosX = Math.round(info.x * percent);
+                var newPosY = Math.round(info.y * percent);
+
+                var newIndex = newPosX + newPosY * info.matrixWidth;
+
+                if (newPosX >= 0 && newPosX < info.matrixWidth && newPosY >= 0 && newPosY < info.matrixHeight) {
+                    return newIndex * 4 + info.colorType;
+                }
+            }, $("<i>").addClass("glyphicon glyphicon-resize-small")));
 
             self.loadTranformsAtScreen();
         });
@@ -166,5 +184,12 @@ class TransformView extends View {
 
         this.transformManager.restoreCanvasImage(this.canvas);
         this.transformManager.applyTransformByNameToCanvas("AMPLIACAO", this.canvas, { percent: percentNumber });
+    }
+
+    private reduceTo(percent: string) {
+        var percentNumber = parseFloat(percent);
+
+        this.transformManager.restoreCanvasImage(this.canvas);
+        this.transformManager.applyTransformByNameToCanvas("REDUCAO", this.canvas, { percent: percentNumber });
     }
 }
