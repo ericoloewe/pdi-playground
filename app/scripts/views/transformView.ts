@@ -99,7 +99,7 @@ class TransformView extends View {
                 var newPosX = info.x / percent;
                 var newPosY = info.y / percent;
 
-                var newIndex = newPosX + newPosY * info.matrixWidth * percent;
+                var newIndex = Math.round(newPosX + newPosY * info.matrixWidth * percent);
 
                 if (newPosX >= 0 && newPosX < info.matrixWidth * percent && newPosY >= 0 && newPosY < info.matrixHeight * percent) {
                     return newIndex * 4 + info.colorType;
@@ -161,10 +161,10 @@ class TransformView extends View {
         });
     }
 
-    private enlargeTo(percent: number) {
-        percent = Math.round(percent);
+    private enlargeTo(percent: string) {
+        var percentNumber = parseFloat(percent);
 
         this.transformManager.restoreCanvasImage(this.canvas);
-        this.transformManager.applyTransformByNameToCanvas("AMPLIACAO", this.canvas, { percent: percent });
+        this.transformManager.applyTransformByNameToCanvas("AMPLIACAO", this.canvas, { percent: percentNumber });
     }
 }
