@@ -29,7 +29,9 @@ class TransformView extends View {
     private bindEvents() {
         var self = this;
         var $thread: number;
+        var isHorizontalMirroring = false;
         var $panelFragment = this.fragment.$htmlLoadedWithChilds.siblings(".panel-transforms");
+        var $iconsList = this.fragment.$htmlLoadedWithChilds.find(".transforms-list");
 
         $panelFragment.find(".panel-translation .form-pos-x, .panel-translation .form-pos-y").on("change keyup", function (e) {
             var x = $panelFragment.find(".panel-translation .form-pos-x").val();
@@ -58,6 +60,15 @@ class TransformView extends View {
         $panelFragment.find(".panel-reduction form").on("submit", function (e) {
             var formData: any = new FormData(this);
             self.reduceTo(formData.get("percent"));
+            return e.preventDefault();
+        });
+
+        $panelFragment.find(".panel-mirroring form").on("submit", function (e) {
+            var formData: any = new FormData(this);
+            var wantHorizontalMirror = formData.get("horizontal-mirroring") === "on";
+            var wantVerticalMirror = formData.get("vertical-mirroring") === "on";
+
+            self.applyMirroringToCanvas({ vertical: wantVerticalMirror, horizontal: wantHorizontalMirror });
             return e.preventDefault();
         });
     }
@@ -123,6 +134,19 @@ class TransformView extends View {
                     return newIndex * 4 + info.colorType;
                 }
             }, $("<i>").addClass("glyphicon glyphicon-resize-small")));
+
+            self.transformManager.addTransform(new Transform("ESPELHAMENTO", function (info: TransformInfo) {
+                var wantHorizontalMirror = info.params.horizontal;
+                var wantVerticalMirror = info.params.vertical;
+                var newPosX = wantHorizontalMirror ? info.matrixWidth - info.x : info.x;
+                var newPosY = wantVerticalMirror ? info.matrixHeight - info.y : info.y;
+
+                var newIndex = newPosX + newPosY * info.matrixWidth;
+
+                if (newPosX >= 0 && newPosX < info.matrixWidth && newPosY >= 0 && newPosY < info.matrixHeight) {
+                    return newIndex * 4 + info.colorType;
+                }
+            }, $("<i>").addClass("glyphicon glyphicon-road")));
 
             self.loadTranformsAtScreen();
         });
@@ -191,5 +215,10 @@ class TransformView extends View {
 
         this.transformManager.restoreCanvasImage(this.canvas);
         this.transformManager.applyTransformByNameToCanvas("REDUCAO", this.canvas, { percent: percentNumber });
+    }
+
+    private applyMirroringToCanvas(options: Object) {
+        this.transformManager.restoreCanvasImage(this.canvas);
+        this.transformManager.applyTransformByNameToCanvas("ESPELHAMENTO", this.canvas, options);
     }
 }
