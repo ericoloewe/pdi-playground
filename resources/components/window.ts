@@ -10,7 +10,7 @@ module components {
         constructor() {
             var self = this;
 
-            this.own = new BrowserWindow({ width: 1200, height: 800 });
+            this.own = new BrowserWindow({ width: 1200, height: 800, icon: `${__dirname}/app/media/img/pdi.ico` });
             this.own.loadURL(`file://${__dirname}/app/index.html`);
             this.own.webContents.openDevTools();
 
