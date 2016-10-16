@@ -57,7 +57,8 @@ class PDIPlayGroundApplication extends Application {
                     new Fragment("rotation", "views/transform/panel/rotation.html"),
                     new Fragment("enlarge", "views/transform/panel/enlarge.html"),
                     new Fragment("reduction", "views/transform/panel/reduction.html"),
-                    new Fragment("mirroring", "views/transform/panel/mirroring.html")
+                    new Fragment("mirroring", "views/transform/panel/mirroring.html"),
+                    new Fragment("matrix", "views/transform/panel/matrix.html")
                 ]),
             ]), PDIPlayGroundApplication.actualPicture))
         ]);

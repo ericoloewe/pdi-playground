@@ -71,6 +71,21 @@ class TransformView extends View {
             self.applyMirroringToCanvas({ vertical: wantVerticalMirror, horizontal: wantHorizontalMirror });
             return e.preventDefault();
         });
+
+        $panelFragment.find(".panel-matrix form").on("submit", function (e) {
+            var matrix = new Array<Array<number>>([], []);
+            var formData: any = new FormData(this);
+
+            matrix[0][0] = parseFloat(formData.get("pos00"));
+            matrix[0][1] = parseFloat(formData.get("pos01"));
+            matrix[0][2] = parseFloat(formData.get("pos02"));
+            matrix[1][0] = parseFloat(formData.get("pos10"));
+            matrix[1][1] = parseFloat(formData.get("pos11"));
+            matrix[1][2] = parseFloat(formData.get("pos12"));
+
+            self.applyFreeTransform(matrix);
+            return e.preventDefault();
+        });
     }
 
     private loadCanvas() {
@@ -148,6 +163,21 @@ class TransformView extends View {
                 }
             }, $("<i>").addClass("glyphicon glyphicon-road")));
 
+            self.transformManager.addTransform(new Transform("MATRIZ", function (info: TransformInfo) {
+                var matrix = info.params.matrix;
+                var newPosX = (info.x * matrix[0][0]) + (info.y * matrix[0][1]) + (matrix[0][2]);
+                var newPosY = (info.x * matrix[1][0]) + (info.y * matrix[1][1]) + (matrix[1][2]);
+
+                newPosX = Math.round(newPosX);
+                newPosY = Math.round(newPosY);
+
+                var newIndex = newPosX + newPosY * info.matrixWidth;
+
+                if (newPosX >= 0 && newPosX < info.matrixWidth && newPosY >= 0 && newPosY < info.matrixHeight) {
+                    return newIndex * 4 + info.colorType;
+                }
+            }, $("<i>").addClass("glyphicon glyphicon-th")));
+
             self.loadTranformsAtScreen();
         });
     }
@@ -220,5 +250,10 @@ class TransformView extends View {
     private applyMirroringToCanvas(options: Object) {
         this.transformManager.restoreCanvasImage(this.canvas);
         this.transformManager.applyTransformByNameToCanvas("ESPELHAMENTO", this.canvas, options);
+    }
+
+    private applyFreeTransform(matrix: Array<Array<number>>) {
+        this.transformManager.restoreCanvasImage(this.canvas);
+        this.transformManager.applyTransformByNameToCanvas("MATRIZ", this.canvas, { matrix: matrix });
     }
 }
