@@ -19,14 +19,7 @@ class StatisticsView extends View {
         var self = this;
         this.fragment.on("load-all", function () {
             self.$canvasSection = self.fragment.$htmlLoadedWithChilds.find("#STATISTICS_CANVAS_SECTION");
-            var canvas = <HTMLCanvasElement>document.createElement('canvas');
-            canvas.id = "STATISTICS_CANVAS";
-            canvas.className = "pdi-canvas";
-            canvas.width = 512;
-            canvas.height = 512;
-
-            CanvasUtil.reziseImageCanvas(canvas, self.picture.getHtmlImage(), canvas.width, canvas.height);
-
+            var canvas = CanvasUtil.createCustomCanvas(512, 512, self.picture.getHtmlImage(), "STATISTICS_CANVAS", "pdi-canvas");
             self.canvas = canvas;
             self.$canvasSection.append(canvas);
         });

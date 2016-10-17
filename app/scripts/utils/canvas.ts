@@ -26,4 +26,18 @@ class CanvasUtil {
 
         CanvasUtil.reziseImageCanvas(canvas, img, canvas.width, canvas.height)
     }
+
+    public static createCustomCanvas(width: number, height: number, img?: HTMLImageElement, id?: string, className?: string): HTMLCanvasElement {
+        var canvas = <HTMLCanvasElement>document.createElement('canvas');
+        canvas.id = id;
+        canvas.className = className;
+        canvas.width = width;
+        canvas.height = height;
+
+        if (img !== undefined) {
+            CanvasUtil.reziseImageCanvas(canvas, img, canvas.width, canvas.height);
+        }
+
+        return canvas;
+    }
 }
