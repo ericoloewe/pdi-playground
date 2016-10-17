@@ -7,6 +7,7 @@ class CanvasUtil {
 
         oc.width = width;
         oc.height = height;
+        ctx.clearRect(0, 0 , width, height);
         octx.drawImage(img, 0, 0, oc.width, oc.height);
 
         octx.drawImage(oc, 0, 0, width, height);

@@ -3,33 +3,31 @@
 /// <reference path="views/homeView.ts" />
 /// <reference path="views/statisticsView.ts" />
 /// <reference path="views/filterView.ts" />
+/// <reference path="views/transformView.ts" />
 /// <reference path="views/headerView.ts" />
 
 class PDIPlayGroundApplication extends Application {
     public static own: PDIPlayGroundApplication;
     public static imagePath: string;
     public static actualPicture: Picture;
-    public static canvas: Fragment;
+    public static canvas: HTMLCanvasElement;
 
     constructor() {
         super();
         this.createInitialPages();
-        PDIPlayGroundApplication.canvas = new Fragment("canvas", "views/shared/canvas.html");
+        PDIPlayGroundApplication.canvas = document.createElement('canvas');
     }
 
     public initImage(imagePath: string) {
         var self = this;
         PDIPlayGroundApplication.imagePath = imagePath;
-
-        PDIPlayGroundApplication.canvas.on("load-all", function () {
-            PDIPlayGroundApplication.actualPicture = new Picture(imagePath, PDIPlayGroundApplication.canvas);
-            $(PDIPlayGroundApplication.actualPicture.getHtmlImage()).on("load", function () {
-                self.createPages();
-                self.pageManager.activePageByName("header");
-                self.pageManager.activePageByName("statistics");
-                self.pageManager.activePageByName("canvas");
-                self.pageManager.refreshLinks();
-            });
+        PDIPlayGroundApplication.actualPicture = new Picture(imagePath, PDIPlayGroundApplication.canvas);
+        $(PDIPlayGroundApplication.actualPicture.getHtmlImage()).on("load", function () {
+            self.createPages();
+            self.pageManager.activePageByName("header");
+            self.pageManager.activePageByName("statistics");
+            self.pageManager.activePageByName("canvas");
+            self.pageManager.refreshLinks();
         });
     }
 
@@ -51,6 +49,17 @@ class PDIPlayGroundApplication extends Application {
             ]), PDIPlayGroundApplication.actualPicture)),
             new Page(new FilterView(new Fragment("filters", "views/filters.html", [
                 new Fragment("nav-filters", "views/filter/nav-filters.html")
+            ]), PDIPlayGroundApplication.actualPicture)),
+            new Page(new TransformView(new Fragment("transforms", "views/transforms.html", [
+                new Fragment("nav-transforms", "views/transform/nav.html"),
+                new Fragment("panel-transforms", "views/transform/panel.html", [
+                    new Fragment("translation", "views/transform/panel/translation.html"),
+                    new Fragment("rotation", "views/transform/panel/rotation.html"),
+                    new Fragment("enlarge", "views/transform/panel/enlarge.html"),
+                    new Fragment("reduction", "views/transform/panel/reduction.html"),
+                    new Fragment("mirroring", "views/transform/panel/mirroring.html"),
+                    new Fragment("matrix", "views/transform/panel/matrix.html")
+                ]),
             ]), PDIPlayGroundApplication.actualPicture))
         ]);
     }

@@ -1,0 +1,80 @@
+// ========================================================================
+// TRANSFORMS
+// ========================================================================
+
+.transforms-page {
+    .nav-transforms {
+        position: fixed;
+        height: 100%;
+        top: 0;
+        left: 0;
+        padding-top: 51px;
+        background: #FFF;
+        @include box-shadow(0 1px 1px 0 rgba(0,0,0,.06),0 2px 5px 0 rgba(0,0,0,.2));
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        .transforms-list {
+            padding: 0;
+            list-style: none;
+
+            > li {
+                display: block;
+                padding: 10px 20px;
+            }
+        }
+    }
+
+    .panel-transforms {
+        position: fixed;
+        min-width: 300px;
+        min-height: 300px;
+        top: 100px;
+        right: 50px;
+
+        .panel {
+            display: none;
+
+            &.active {
+                display: block;
+            }
+
+            &-translation {
+                max-width: 300px;
+            }
+
+            &-rotation {
+                max-width: 350px;
+
+                .panel-body {
+                    form {
+                        > div {
+                            margin: 5px auto;
+
+                            .btn,
+                            .input-group {
+                                width: 100%;
+                            }
+                        }
+                    }
+                }
+            }
+
+            &-enlarge {
+                max-width: 300px;
+            }
+
+            &-reduction {
+                max-width: 300px;
+            }
+
+            &-mirroring {
+                max-width: 300px;
+            }
+
+            &-matrix {
+                max-width: 400px;
+            }
+        }
+    }
+}
