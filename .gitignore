@@ -2,7 +2,7 @@
 node_modules/
 dist/
 npm-debug.log
-resources/**/*.js
+src/**/*.js
 app/scripts/**/*.js
 app/styles/**/*.css
 main.js
