@@ -1,14 +1,12 @@
-/// <reference path="references/electron/main.ts"/>
-/// <reference path="components/window.ts" />
-/// <reference path="components/app.ts" />
+"use strict";
 
-let App = components.App;
+import { ElectronApp } from "./components/exports";
 
 class Bootstrap {
-    private mainApp: components.App;
+    private mainApp: ElectronApp;
 
     constructor() {
-        this.mainApp = new App();
+        this.mainApp = new ElectronApp();
     }
 }
 

@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "description": "A smart photoshop created in a class",
     "author": "Érico de Souza Loewe <ericoloewe@gmail.com>",
-    "main": "main.js",
+    "main": "resources/bootstrap.js",
     "scripts": {
         "start": "gulp build && electron . --enable-logging",
         "postinstall": "install-app-deps",
