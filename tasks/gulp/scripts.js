@@ -4,7 +4,7 @@ var concat = require("gulp-concat");
 var uglify = require("gulp-uglify");
 var rename = require("gulp-rename");
 var appTsProject = ts.createProject("app/tsconfig.json");
-var resourcesTsProject = ts.createProject("resources/tsconfig.json");
+var srcTsProject = ts.createProject("src/tsconfig.json");
 
 var paths = {
     compile: ["./app/scripts/**/*.ts"],
@@ -13,10 +13,10 @@ var paths = {
     dest: "./app/scripts"
 };
 
-var resourcesPaths = {
-    compile: ["./resources/**/**/*.ts"],
-    watch: ["./resources/**/*.ts"],
-    dest: "./resources/"
+var srcPaths = {
+    compile: ["./src/**/**/*.ts"],
+    watch: ["./src/**/*.ts"],
+    dest: "./src/"
 };
 
 gulp.task("scripts:vendors", function () {
@@ -38,16 +38,16 @@ gulp.task("scripts", ["scripts:vendors"], function () {
         .pipe(gulp.dest(paths.dest));
 });
 
-gulp.task("resources-scripts", function () {
-    return gulp.src(resourcesPaths.compile)
-        .pipe(ts(resourcesTsProject))
-        .pipe(gulp.dest(resourcesPaths.dest));
+gulp.task("src-scripts", function () {
+    return gulp.src(srcPaths.compile)
+        .pipe(ts(srcTsProject))
+        .pipe(gulp.dest(srcPaths.dest));
 });
 
 gulp.task("scripts:watch", function () {
     gulp.watch(paths.watch, ["scripts"]);
 });
 
-gulp.task("resources-scripts:watch", function () {
-    gulp.watch(resourcesPaths.watch, ["resources-scripts"]);
+gulp.task("src-scripts:watch", function () {
+    gulp.watch(srcPaths.watch, ["src-scripts"]);
 });

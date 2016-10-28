@@ -4,6 +4,6 @@
         ".sass-cache/": true,
         "**/*min.js": true,
         "**/*min.css": true,
-        // "resources/**/*.js": true
+        "src/**/*.js": true
     }
 }
