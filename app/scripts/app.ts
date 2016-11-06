@@ -4,6 +4,7 @@
 /// <reference path="views/statisticsView.ts" />
 /// <reference path="views/filterView.ts" />
 /// <reference path="views/transformView.ts" />
+/// <reference path="views/segmentationView.ts" />
 /// <reference path="views/headerView.ts" />
 
 class PDIPlayGroundApplication extends Application {
@@ -60,6 +61,9 @@ class PDIPlayGroundApplication extends Application {
                     new Fragment("mirroring", "views/transform/panel/mirroring.html"),
                     new Fragment("matrix", "views/transform/panel/matrix.html")
                 ]),
+            ]), PDIPlayGroundApplication.actualPicture)),
+            new Page(new SegmentationView(new Fragment("segmentations", "views/segmentations.html", [
+                new Fragment("nav-segmentations", "views/segmentation/nav-segmentations.html")
             ]), PDIPlayGroundApplication.actualPicture))
         ]);
     }
