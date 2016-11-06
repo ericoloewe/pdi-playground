@@ -1,6 +1,6 @@
 "use strict";
 
-class Picture {
+export class Picture {
     constructor() {
         
     }
