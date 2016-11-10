@@ -9,6 +9,7 @@ class SegmentationView extends View {
     private canvasWidth: number;
     private canvasHeight: number;
     private segmentationManager: SegmentationManager;
+    private maskArray: Array<Array<number>>;
 
     public constructor(fragment: Fragment, picture: Picture) {
         super(fragment);
@@ -16,6 +17,7 @@ class SegmentationView extends View {
         this.segmentationManager = new SegmentationManager(picture);
         this.canvasHeight = 650;
         this.canvasWidth = 650;
+        this.maskArray = [[1, 1, 1], [1, 1, 1], [1, 1, 1]];
 
         this.fragment.on("load-all", function() {
             this.loadSegmentations();
@@ -28,7 +30,7 @@ class SegmentationView extends View {
         var self = this;
 
         this.segmentationManager.picture.on("load-all-values", function() {
-            this.applyMedianFilterSegmentation();
+            this.loadSegmentationsAtScreen();
         }.bind(this));
     }
 
@@ -40,6 +42,14 @@ class SegmentationView extends View {
     }
 
     private loadSegmentations() {
+        this.segmentationManager.addSegmentation(new Segmentation("ORIGINAL", function(info: SegmentationInfo) {
+            return info.color;
+        }));
+
+        this.segmentationManager.addSegmentation(new Segmentation("CINZA", function(info: SegmentationInfo) {
+            return (info.red + info.blue + info.green) / 3;
+        }));
+
         this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DA-MEDIANA", function(info: SegmentationInfo) {
             var x = info.x, y = info.y, z = 0;
             var halfMascLenght = Math.floor(info.mask.length / 2), halfMascRowLenght: number;
@@ -49,6 +59,24 @@ class SegmentationView extends View {
                 halfMascRowLenght = Math.floor(row.length / 2);
                 row.forEach(function(value, j) {
                     arrayToCalcMedian.push(getColorByCovolution(info.matrix, x + (i - halfMascLenght), y + (j - halfMascRowLenght), info.colorType));
+                });
+            });
+
+            return Math.median(arrayToCalcMedian);
+        }));
+
+        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DA-MEDIANA-CINZA", function(info: SegmentationInfo) {
+            var x = info.x, y = info.y, z = 0;
+            var halfMascLenght = Math.floor(info.mask.length / 2), halfMascRowLenght: number;
+            var arrayToCalcMedian = new Array<number>();
+
+            info.mask.forEach(function(row, i) {
+                halfMascRowLenght = Math.floor(row.length / 2);
+                row.forEach(function(value, j) {
+                    var red = getColorByCovolution(info.matrix, x + (i - halfMascLenght), y + (j - halfMascRowLenght), ColorType.RED);
+                    var blue = getColorByCovolution(info.matrix, x + (i - halfMascLenght), y + (j - halfMascRowLenght), ColorType.BLUE);
+                    var green = getColorByCovolution(info.matrix, x + (i - halfMascLenght), y + (j - halfMascRowLenght), ColorType.GREEN);
+                    arrayToCalcMedian.push((red + blue + green) / 3);
                 });
             });
 
@@ -72,21 +100,38 @@ class SegmentationView extends View {
                 realY = y - height;
             }
 
-            if (realX >= matrix[0].length || realX < 0 || realY >= matrix.length || realY < 0) {
-                debugger;
-            }
-
             return matrix[realY][realX][colorType];
         }
     }
 
-    private applyMedianFilterSegmentation() {
-        var maskArray = [[1, 1, 1], [1, 1, 1], [1, 1, 1]];
-        this.restoreCanvasImage();
-        this.segmentationManager.applySegmentationByNameToCanvas("FILTRO-DA-MEDIANA", this.canvas, maskArray);
+    private loadSegmentationsAtScreen() {
+        var self = this;
+        var segmentationList = this.fragment.$htmlLoadedWithChilds.find(".segmentation-list");
+
+        segmentationList.append(this.segmentationManager.getSegmentations().map(function(segmentation) {
+            return $("<li>")
+                .append(this.createCanvasForSegmentation(segmentation, 100, 100))
+                .attr("data-segmentation-name", <string>segmentation.name)
+                .attr("title", <string>segmentation.name)
+                .click(function(e) {
+                    var $canvas = $(this);
+                    self.restoreCanvasImage();
+                    self.segmentationManager.applySegmentationByNameToCanvas($canvas.data("segmentation-name"), self.canvas, self.maskArray);
+                    return e.preventDefault();
+                });
+        }, this));
     }
 
-    private restoreCanvasImage() {
+    private createCanvasForSegmentation(segmentation: Segmentation, width: number, height: number): HTMLCanvasElement {
+        var canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+
+        this.segmentationManager.applySegmentationByNameToCanvas(segmentation.name, canvas, this.maskArray);
+        return canvas;
+    }
+
+    private restoreCanvasImage(canvas: HTMLCanvasElement = this.canvas) {
         CanvasUtil.reziseImageCanvas(this.canvas, this.segmentationManager.picture.getHtmlImage(), this.canvas.width, this.canvas.height);
     }
 }

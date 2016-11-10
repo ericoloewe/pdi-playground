@@ -1,3 +1,4 @@
+/// <reference path="../utils/string.ts" />
 /// <reference path="../models/picture.ts" />
 /// <reference path="../models/segmentation.ts" />
 /// <reference path="../models/segmentationType.ts" />
@@ -75,10 +76,10 @@ class SegmentationManager {
         var y = 0;
 
         for (var i = 0; i < originalImageData.data.length; i += 4, x++) {
-            newImageData.data[i] = this.getNewColorBySegmentation(segmentation, originalImageData, ColorType.RED, i, x, y, mask);
-            newImageData.data[i + 1] = this.getNewColorBySegmentation(segmentation, originalImageData, ColorType.BLUE, i, x, y, mask);
-            newImageData.data[i + 2] = this.getNewColorBySegmentation(segmentation, originalImageData, ColorType.GREEN, i, x, y, mask);
-            newImageData.data[i + 3] = originalImageData.data[i + 3];
+            newImageData.data[i + ColorType.RED] = this.getNewColorBySegmentation(segmentation, originalImageData, ColorType.RED, i, x, y, mask);
+            newImageData.data[i + ColorType.BLUE] = this.getNewColorBySegmentation(segmentation, originalImageData, ColorType.BLUE, i, x, y, mask);
+            newImageData.data[i + ColorType.GREEN] = this.getNewColorBySegmentation(segmentation, originalImageData, ColorType.GREEN, i, x, y, mask);
+            newImageData.data[i + ColorType.ALPHA] = originalImageData.data[i + ColorType.ALPHA];
 
             if (x > originalImageData.width - 1) {
                 y++;
@@ -97,10 +98,10 @@ class SegmentationManager {
         var y = 0;
 
         for (var i = 0; i < originalImageData.data.length; i += 4, x++) {
-            newImageData.data[i] = this.getNewColorBySegmentation(segmentation, originalImageData, ColorType.RED, i, x, y, mask);
-            newImageData.data[i + 1] = this.getNewColorBySegmentation(segmentation, originalImageData, ColorType.BLUE, i, x, y, mask);
-            newImageData.data[i + 2] = this.getNewColorBySegmentation(segmentation, originalImageData, ColorType.GREEN, i, x, y, mask);
-            newImageData.data[i + 3] = this.getNewColorBySegmentation(segmentation, originalImageData, ColorType.ALPHA, i, x, y, mask);
+            newImageData.data[i + ColorType.RED] = this.getNewColorBySegmentation(segmentation, originalImageData, ColorType.RED, i, x, y, mask);
+            newImageData.data[i + ColorType.BLUE] = this.getNewColorBySegmentation(segmentation, originalImageData, ColorType.BLUE, i, x, y, mask);
+            newImageData.data[i + ColorType.GREEN] = this.getNewColorBySegmentation(segmentation, originalImageData, ColorType.GREEN, i, x, y, mask);
+            newImageData.data[i + ColorType.ALPHA] = this.getNewColorBySegmentation(segmentation, originalImageData, ColorType.ALPHA, i, x, y, mask);
 
             if (x > originalImageData.width - 1) {
                 y++;
