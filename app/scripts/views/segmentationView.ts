@@ -40,8 +40,10 @@ class SegmentationView extends View {
         var self = this;
 
         this.segmentationManager.picture.on("load-all-values", function() {
+            this.enableLoader();
             setTimeout(function() {
                 this.loadSegmentationsAtScreen();
+                this.disableLoader();
             }.bind(this), 10);
         }.bind(this));
     }
@@ -116,6 +118,25 @@ class SegmentationView extends View {
             return newColor / 16;
         }));
 
+        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-GAUSS-CINZA", function(info: SegmentationInfo) {
+            var x = info.x, y = info.y, z = 0;
+            var newColor = 0;
+            var halfMascLenght = Math.floor(info.mask.length / 2), halfMascRowLenght: number;
+
+            self.gausMaskArray.forEach(function(row, i) {
+                halfMascRowLenght = Math.floor(row.length / 2);
+                row.forEach(function(value, j) {
+                    var red = getColorByCovolution(info.matrix, x + (i - halfMascLenght), y + (j - halfMascRowLenght), ColorType.RED) * self.gausMaskArray[i][j];
+                    var blue = getColorByCovolution(info.matrix, x + (i - halfMascLenght), y + (j - halfMascRowLenght), ColorType.BLUE) * self.gausMaskArray[i][j];
+                    var green = getColorByCovolution(info.matrix, x + (i - halfMascLenght), y + (j - halfMascRowLenght), ColorType.GREEN) * self.gausMaskArray[i][j];
+
+                    newColor += (red + blue + green) / 3;
+                });
+            });
+
+            return newColor / 16;
+        }));
+
         function getColorByCovolution(matrix: Array<Array<Array<number>>>, x: number, y: number, colorType: ColorType): number {
             var realX = x, realY = y;
             var width = matrix[0].length - 2;
@@ -148,8 +169,10 @@ class SegmentationView extends View {
                 .attr("title", <string>segmentation.name)
                 .click(function(e) {
                     var $canvas = $(this);
+                    self.enableLoader();
                     self.restoreCanvasImage();
                     self.segmentationManager.applySegmentationByNameToCanvas($canvas.data("segmentation-name"), self.canvas, self.maskArray);
+                    self.disableLoader();
                     return e.preventDefault();
                 });
         }, this));
@@ -166,5 +189,30 @@ class SegmentationView extends View {
 
     private restoreCanvasImage(canvas: HTMLCanvasElement = this.canvas) {
         CanvasUtil.reziseImageCanvas(this.canvas, this.segmentationManager.picture.getHtmlImage(), this.canvas.width, this.canvas.height);
+    }
+
+    private enableLoader() {
+        var $icon = $("body").find(".icon-loading-shadow");
+
+        if ($icon.length > 0) {
+            $icon.remove();
+        }
+
+        $("body")
+            .append(
+            $("<div>")
+                .addClass("icon-loading-shadow")
+                .append(
+                $("<i>").addClass("glyphicon glyphicon-repeat rotate-infinite icon-loading icon-loading-center")
+                )
+            );
+
+    }
+
+    private disableLoader() {
+        var $icon = $("body").find(".icon-loading-shadow");
+        if ($icon.length > 0) {
+            $icon.remove();
+        }
     }
 }
