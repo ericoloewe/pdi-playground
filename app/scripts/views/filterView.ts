@@ -31,9 +31,6 @@ class FilterView extends View {
 
     public unload() {
         super.unload();
-        var imageSelf = this.filterManager.picture;
-
-        this.filterManager = new FilterManager(imageSelf);
     }
 
     private loadCanvas() {

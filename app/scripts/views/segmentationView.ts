@@ -34,16 +34,15 @@ class SegmentationView extends View {
 
     public unload() {
         super.unload();
-        var imageSelf = this.segmentationManager.picture;
-
-        this.segmentationManager = new SegmentationManager(imageSelf);
     }
 
     private bindEvents() {
         var self = this;
 
         this.segmentationManager.picture.on("load-all-values", function() {
-            this.loadSegmentationsAtScreen();
+            setTimeout(function() {
+                this.loadSegmentationsAtScreen();
+            }.bind(this), 10);
         }.bind(this));
     }
 

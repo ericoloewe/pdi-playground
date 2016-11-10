@@ -32,9 +32,6 @@ class TransformView extends View {
 
     public unload() {
         super.unload();
-        var imageSelf = this.transformManager.picture;
-
-        this.transformManager = new TransformManager(imageSelf);
     }
 
     private bindEvents() {
