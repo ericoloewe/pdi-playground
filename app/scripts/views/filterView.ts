@@ -20,13 +20,18 @@ class FilterView extends View {
         this.filterManager = new FilterManager(image);
         this.canvasHeight = 650;
         this.canvasWidth = 650;
+    }
+
+    public load() {
+        super.load();
+
         this.loadFilters();
         this.loadCanvas();
     }
 
     private loadCanvas() {
         var self = this;
-        this.fragment.on("load-all", function () {
+        this.fragment.on("load-all", function() {
             self.$canvasSection = self.fragment.$htmlLoadedWithChilds.find("#FILTER_CANVAS_SECTION");
             var canvas = CanvasUtil.createCustomCanvas(self.canvasWidth, self.canvasHeight, self.filterManager.picture.getHtmlImage(), "FILTER_CANVAS", "pdi-canvas");
             self.canvas = canvas;
@@ -38,12 +43,12 @@ class FilterView extends View {
         var self = this;
         var filterList = this.fragment.$htmlLoadedWithChilds.find(".filters-list");
 
-        filterList.append(this.filterManager.getFilters().map(function (filter) {
+        filterList.append(this.filterManager.getFilters().map(function(filter) {
             return $("<li>")
                 .append(self.createCanvasForFilter(filter, 100, 100))
                 .attr("data-filter-name", filter.name.toString())
                 .attr("title", filter.name.toString())
-                .click(function (e) {
+                .click(function(e) {
                     var $canvas = $(this);
                     self.filterManager.restoreCanvasImage(self.canvas);
                     self.filterManager.applyFilterByNameToCanvas($canvas.data("filter-name"), self.canvas);
@@ -64,21 +69,21 @@ class FilterView extends View {
     private loadFilters() {
         var self = this;
 
-        this.filterManager.picture.on("load-all-values", function () {
+        this.filterManager.picture.on("load-all-values", function() {
             var picture = self.filterManager.picture;
             var average = picture.gray.statistics.average;
             var median = picture.gray.statistics.median;
             var mode = picture.gray.statistics.mode;
 
-            self.filterManager.addFilter(new Filter("ORIGINAL", function (info: FilterInfo) {
+            self.filterManager.addFilter(new Filter("ORIGINAL", function(info: FilterInfo) {
                 return info.color;
             }));
 
-            self.filterManager.addFilter(new Filter("GRAY", function (info: FilterInfo) {
+            self.filterManager.addFilter(new Filter("GRAY", function(info: FilterInfo) {
                 return (info.red + info.green + info.blue) / 3;
             }, FilterType.RGB));
 
-            self.filterManager.addFilter(new Filter("GRAY-LIGHT", function (info: FilterInfo) {
+            self.filterManager.addFilter(new Filter("GRAY-LIGHT", function(info: FilterInfo) {
                 var gray = (info.red + info.green + info.blue) / 3;
                 if (gray >= 128) {
                     gray = average;
@@ -86,7 +91,7 @@ class FilterView extends View {
                 return gray;
             }, FilterType.RGB));
 
-            self.filterManager.addFilter(new Filter("GRAY-CONTRAST", function (info: FilterInfo) {
+            self.filterManager.addFilter(new Filter("GRAY-CONTRAST", function(info: FilterInfo) {
                 var gray = (info.red + info.green + info.blue) / 3;
                 if (gray >= 128) {
                     gray = mode;
@@ -94,7 +99,7 @@ class FilterView extends View {
                 return gray;
             }, FilterType.RGB));
 
-            self.filterManager.addFilter(new Filter("GRAY-CONTRAST-2", function (info: FilterInfo) {
+            self.filterManager.addFilter(new Filter("GRAY-CONTRAST-2", function(info: FilterInfo) {
                 var gray = (info.red + info.green + info.blue) / 3;
                 if (gray >= 128) {
                     gray = median;
@@ -102,7 +107,7 @@ class FilterView extends View {
                 return gray;
             }, FilterType.RGB));
 
-            self.filterManager.addFilter(new Filter("GRAY-HOT", function (info: FilterInfo) {
+            self.filterManager.addFilter(new Filter("GRAY-HOT", function(info: FilterInfo) {
                 var gray = (info.red + info.green + info.blue) / 3;
                 if (gray < average) {
                     gray = 0;
@@ -110,7 +115,7 @@ class FilterView extends View {
                 return gray;
             }, FilterType.RGB));
 
-            self.filterManager.addFilter(new Filter("GRAY-HOT-2", function (info: FilterInfo) {
+            self.filterManager.addFilter(new Filter("GRAY-HOT-2", function(info: FilterInfo) {
                 var gray = (info.red + info.green + info.blue) / 3;
                 if (gray < average) {
                     gray = 0;
@@ -120,7 +125,7 @@ class FilterView extends View {
                 return gray;
             }, FilterType.RGB));
 
-            self.filterManager.addFilter(new Filter("BLUE-LIGHT", function (info: FilterInfo) {
+            self.filterManager.addFilter(new Filter("BLUE-LIGHT", function(info: FilterInfo) {
                 if (info.color >= 128) {
                     info.color = average;
                 }
@@ -128,7 +133,7 @@ class FilterView extends View {
                 return info.color;
             }));
 
-            self.filterManager.addFilter(new Filter("CONTRAST", function (info: FilterInfo) {
+            self.filterManager.addFilter(new Filter("CONTRAST", function(info: FilterInfo) {
                 if (info.color >= 128) {
                     info.color = mode;
                 }
@@ -136,7 +141,7 @@ class FilterView extends View {
                 return info.color;
             }));
 
-            self.filterManager.addFilter(new Filter("CONTRAST-2", function (info: FilterInfo) {
+            self.filterManager.addFilter(new Filter("CONTRAST-2", function(info: FilterInfo) {
                 if (info.color >= 128) {
                     info.color = median;
                 }
@@ -144,7 +149,7 @@ class FilterView extends View {
                 return info.color;
             }));
 
-            self.filterManager.addFilter(new Filter("HOT", function (info: FilterInfo) {
+            self.filterManager.addFilter(new Filter("HOT", function(info: FilterInfo) {
                 if (info.color < average) {
                     info.color = 0;
                 }
@@ -152,7 +157,7 @@ class FilterView extends View {
                 return info.color;
             }));
 
-            self.filterManager.addFilter(new Filter("HOT-2", function (info: FilterInfo) {
+            self.filterManager.addFilter(new Filter("HOT-2", function(info: FilterInfo) {
                 if (info.color < average) {
                     info.color = 0;
                 } else if (info.color > median) {
@@ -161,34 +166,34 @@ class FilterView extends View {
 
                 return info.color;
             }));
-            
+
             var hotFilter = self.filterManager.getFilterByName("HOT");
             var grayHotFilter = self.filterManager.getFilterByName("GRAY-HOT");
 
-            self.filterManager.addFilter(new Filter("RED", function (info: FilterInfo) {
+            self.filterManager.addFilter(new Filter("RED", function(info: FilterInfo) {
                 return info.red;
             }, FilterType.RGB));
 
-            self.filterManager.addFilter(new Filter("BLUE", function (info: FilterInfo) {
+            self.filterManager.addFilter(new Filter("BLUE", function(info: FilterInfo) {
                 return info.blue;
             }, FilterType.RGB));
 
-            self.filterManager.addFilter(new Filter("GREEN", function (info: FilterInfo) {
+            self.filterManager.addFilter(new Filter("GREEN", function(info: FilterInfo) {
                 return info.green;
             }, FilterType.RGB));
 
-            self.filterManager.addFilter(new Filter("ALPHA", function (info: FilterInfo) {
+            self.filterManager.addFilter(new Filter("ALPHA", function(info: FilterInfo) {
                 return info.alpha;
             }, FilterType.RGB));
 
-            self.filterManager.addFilter(new Filter("HALF-GREEN", function (info: FilterInfo) {
+            self.filterManager.addFilter(new Filter("HALF-GREEN", function(info: FilterInfo) {
                 if (info.x < info.y) {
                     return grayHotFilter.method(info);
                 }
                 return hotFilter.method(info);
             }, FilterType.RGB));
 
-            self.filterManager.addFilter(new Filter("HALF-GREEN-2", function (info: FilterInfo) {
+            self.filterManager.addFilter(new Filter("HALF-GREEN-2", function(info: FilterInfo) {
                 if (info.x > info.y) {
                     return grayHotFilter.method(info);
                 }

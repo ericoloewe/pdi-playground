@@ -13,17 +13,21 @@ class TransformView extends View {
 
     public constructor(fragment: Fragment, picture: Picture) {
         super(fragment);
-        var self = this;
 
         this.transformManager = new TransformManager(picture);
         this.canvasHeight = 650;
         this.canvasWidth = 650;
 
+    }
+
+    public load() {
+        super.load();
+
         this.fragment.on("load-all", function () {
-            self.loadTransforms();
-            self.loadCanvas();
-            self.bindEvents();
-        });
+            this.loadTransforms();
+            this.loadCanvas();
+            this.bindEvents();
+        }.bind(this));
     }
 
     private bindEvents() {

@@ -20,6 +20,10 @@ class SegmentationView extends View {
         this.canvasWidth = 650;
         this.maskArray = [[1, 1, 1], [1, 1, 1], [1, 1, 1]];
         this.gausMaskArray = [[1, 2, 1], [2, 4, 2], [1, 2, 1]];
+    }
+
+    public load() {
+        super.load();
 
         this.fragment.on("load-all", function() {
             this.loadSegmentations();

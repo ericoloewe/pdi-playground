@@ -11,6 +11,11 @@ class StatisticsView extends View {
         super(fragment);
 
         this.picture = picture;
+    }
+
+    public load() {
+        super.load();
+
         this.bindEvents();
         this.loadCanvas();
     }
