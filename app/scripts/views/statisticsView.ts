@@ -36,7 +36,7 @@ class StatisticsView extends View {
                 this.defineStatistics();
                 this.openCharts();
             }.bind(this), 10);
-        });
+        }.bind(this));
     }
 
     private defineStatistics() {
