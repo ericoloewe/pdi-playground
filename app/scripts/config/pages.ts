@@ -4,15 +4,23 @@
 
 interface PageableView {
     load(): void;
+    unload(): void;
+}
+
+enum PageType {
+    COMMON,
+    PARTIAL
 }
 
 class Page {
     public view: View;
     public enabled: boolean;
+    public type: PageType;
 
-    constructor(view: View, enabled: boolean = false) {
+    constructor(view: View, enabled: boolean = false, type: PageType = PageType.COMMON) {
         this.view = view;
         this.enabled = enabled;
+        this.type = type;
     }
 }
 
@@ -94,6 +102,9 @@ class PageManager {
 
         this.pages.forEach(function(page) {
             $("[data-pages]").removeClass(String.format("{0}-page", page.view.fragment.name));
+            if (page.type !== PageType.PARTIAL) {
+                page.view.unload();
+            }
         });
     }
 

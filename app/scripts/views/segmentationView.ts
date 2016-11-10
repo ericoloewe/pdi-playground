@@ -32,6 +32,13 @@ class SegmentationView extends View {
         }.bind(this));
     }
 
+    public unload() {
+        super.unload();
+        var imageSelf = this.segmentationManager.picture;
+
+        this.segmentationManager = new SegmentationManager(imageSelf);
+    }
+
     private bindEvents() {
         var self = this;
 

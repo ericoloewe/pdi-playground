@@ -29,6 +29,13 @@ class FilterView extends View {
         this.loadCanvas();
     }
 
+    public unload() {
+        super.unload();
+        var imageSelf = this.filterManager.picture;
+
+        this.filterManager = new FilterManager(imageSelf);
+    }
+
     private loadCanvas() {
         var self = this;
         this.fragment.on("load-all", function() {

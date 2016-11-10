@@ -23,11 +23,18 @@ class TransformView extends View {
     public load() {
         super.load();
 
-        this.fragment.on("load-all", function () {
+        this.fragment.on("load-all", function() {
             this.loadTransforms();
             this.loadCanvas();
             this.bindEvents();
         }.bind(this));
+    }
+
+    public unload() {
+        super.unload();
+        var imageSelf = this.transformManager.picture;
+
+        this.transformManager = new TransformManager(imageSelf);
     }
 
     private bindEvents() {
@@ -37,37 +44,37 @@ class TransformView extends View {
         var $panelFragment = this.fragment.$htmlLoadedWithChilds.siblings(".panel-transforms");
         var $iconsList = this.fragment.$htmlLoadedWithChilds.find(".transforms-list");
 
-        $panelFragment.find(".panel-translation .form-pos-x, .panel-translation .form-pos-y").on("change keyup", function (e) {
+        $panelFragment.find(".panel-translation .form-pos-x, .panel-translation .form-pos-y").on("change keyup", function(e) {
             var x = $panelFragment.find(".panel-translation .form-pos-x").val();
             var y = $panelFragment.find(".panel-translation .form-pos-y").val();
 
             clearTimeout($thread);
-            $thread = setTimeout(function () {
+            $thread = setTimeout(function() {
                 self.translateTo(x, y);
             });
 
             return e.preventDefault();
         });
 
-        $panelFragment.find(".panel-rotation form").on("submit", function (e) {
+        $panelFragment.find(".panel-rotation form").on("submit", function(e) {
             var formData: any = new FormData(this);
             self.rotateTo(formData.get("posX"), formData.get("posY"), formData.get("angle"));
             return e.preventDefault();
         });
 
-        $panelFragment.find(".panel-enlarge form").on("submit", function (e) {
+        $panelFragment.find(".panel-enlarge form").on("submit", function(e) {
             var formData: any = new FormData(this);
             self.enlargeTo(formData.get("percent"));
             return e.preventDefault();
         });
 
-        $panelFragment.find(".panel-reduction form").on("submit", function (e) {
+        $panelFragment.find(".panel-reduction form").on("submit", function(e) {
             var formData: any = new FormData(this);
             self.reduceTo(formData.get("percent"));
             return e.preventDefault();
         });
 
-        $panelFragment.find(".panel-mirroring form").on("submit", function (e) {
+        $panelFragment.find(".panel-mirroring form").on("submit", function(e) {
             var formData: any = new FormData(this);
             var wantHorizontalMirror = formData.get("horizontal-mirroring") === "on";
             var wantVerticalMirror = formData.get("vertical-mirroring") === "on";
@@ -76,7 +83,7 @@ class TransformView extends View {
             return e.preventDefault();
         });
 
-        $panelFragment.find(".panel-matrix form").on("submit", function (e) {
+        $panelFragment.find(".panel-matrix form").on("submit", function(e) {
             var matrix = new Array<Array<number>>([], []);
             var formData: any = new FormData(this);
 
@@ -103,8 +110,8 @@ class TransformView extends View {
         var self = this;
         var a = new Array();
 
-        this.transformManager.picture.on("load-all-values", function () {
-            self.transformManager.addTransform(new Transform("TRANSLACAO", function (info: TransformInfo) {
+        this.transformManager.picture.on("load-all-values", function() {
+            self.transformManager.addTransform(new Transform("TRANSLACAO", function(info: TransformInfo) {
                 var posY = info.y + info.params.translateY;
                 var posX = info.x + info.params.translateX;
                 var newIndex = posX + posY * info.matrixWidth;
@@ -114,7 +121,7 @@ class TransformView extends View {
                 }
             }, $("<i>").addClass("glyphicon glyphicon-move")));
 
-            self.transformManager.addTransform(new Transform("ROTACAO", function (info: TransformInfo) {
+            self.transformManager.addTransform(new Transform("ROTACAO", function(info: TransformInfo) {
                 var pos1 = info.x - info.params.centerX;
                 var pos2 = info.y - info.params.centerY;
                 var newPosX = info.params.centerX - pos1 * info.params.cos + pos2 * info.params.sin;
@@ -130,7 +137,7 @@ class TransformView extends View {
                 }
             }, $("<i>").addClass("glyphicon").append("∢")));
 
-            self.transformManager.addTransform(new Transform("AMPLIACAO", function (info: TransformInfo) {
+            self.transformManager.addTransform(new Transform("AMPLIACAO", function(info: TransformInfo) {
                 var percent = info.params.percent;
                 var newPosX = info.x / percent;
                 var newPosY = info.y / percent;
@@ -142,7 +149,7 @@ class TransformView extends View {
                 }
             }, $("<i>").addClass("glyphicon glyphicon-resize-full")));
 
-            self.transformManager.addTransform(new Transform("REDUCAO", function (info: TransformInfo) {
+            self.transformManager.addTransform(new Transform("REDUCAO", function(info: TransformInfo) {
                 var percent = info.params.percent;
                 var newPosX = Math.round(info.x * percent);
                 var newPosY = Math.round(info.y * percent);
@@ -154,7 +161,7 @@ class TransformView extends View {
                 }
             }, $("<i>").addClass("glyphicon glyphicon-resize-small")));
 
-            self.transformManager.addTransform(new Transform("ESPELHAMENTO", function (info: TransformInfo) {
+            self.transformManager.addTransform(new Transform("ESPELHAMENTO", function(info: TransformInfo) {
                 var wantHorizontalMirror = info.params.horizontal;
                 var wantVerticalMirror = info.params.vertical;
                 var newPosX = wantHorizontalMirror ? info.matrixWidth - info.x : info.x;
@@ -167,7 +174,7 @@ class TransformView extends View {
                 }
             }, $("<i>").addClass("glyphicon glyphicon-road")));
 
-            self.transformManager.addTransform(new Transform("MATRIZ", function (info: TransformInfo) {
+            self.transformManager.addTransform(new Transform("MATRIZ", function(info: TransformInfo) {
                 var matrix = info.params.matrix;
                 var newPosX = (info.x * matrix[0][0]) + (info.y * matrix[0][1]) + (matrix[0][2]);
                 var newPosY = (info.x * matrix[1][0]) + (info.y * matrix[1][1]) + (matrix[1][2]);
@@ -190,11 +197,11 @@ class TransformView extends View {
         var self = this;
         var transformList = this.fragment.$htmlLoadedWithChilds.find(".transforms-list");
 
-        transformList.append(this.transformManager.getTransforms().map(function (transform) {
+        transformList.append(this.transformManager.getTransforms().map(function(transform) {
             return $("<li>")
                 .attr("data-transform-name", transform.name.toString())
                 .attr("title", transform.name.toString())
-                .click(function (e) {
+                .click(function(e) {
                     var $canvas = $(this);
                     self.openPanelByName($canvas.data("transform-name"));
                     return e.preventDefault();

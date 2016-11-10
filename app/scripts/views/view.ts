@@ -1,5 +1,6 @@
 /// <reference path="../references/jquery/main.ts" />
 /// <reference path="../config/fragments.ts" />
+/// <reference path="../config/pages.ts" />
 
 "use strict";
 
@@ -7,6 +8,7 @@ class View implements PageableView {
     protected scope: any;
     protected $scope: JQuery;
     private isRefreshingScope: Boolean;
+    private scopeInterval: number;
     public fragment: Fragment;
 
     public constructor(fragment: Fragment) {
@@ -20,13 +22,17 @@ class View implements PageableView {
         this.fragment.on("load-all", function() {
             setTimeout(function() {
                 this.setScopes();
-                setInterval(function() {
+                this.scopeInterval = setInterval(function() {
                     if (!this.isRefreshingScope) {
                         this.refreshScopes();
                     }
-                }, 500);
+                }.bind(this), 500);
             }.bind(this), 100);
-        });
+        }.bind(this));
+    }
+
+    public unload() {
+        clearInterval(this.scopeInterval);
     }
 
     public setScopes() {
