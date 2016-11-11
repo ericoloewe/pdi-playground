@@ -120,6 +120,10 @@ class SegmentationView extends View {
 
         var thresholding = 10;
 
+        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-LIMIARIZACAO", function(info: SegmentationInfo) {
+            return info.color > thresholding ? 255 : 0;
+        }));
+
         this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-LIMIARIZACAO-CINZA", function(info: SegmentationInfo) {
             var cinza = (info.red + info.blue + info.green) / 3;
             return cinza > thresholding ? 255 : 0;
