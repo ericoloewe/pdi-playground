@@ -118,23 +118,11 @@ class SegmentationView extends View {
             return newColor / 16;
         }));
 
-        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-GAUSS-CINZA", function(info: SegmentationInfo) {
-            var x = info.x, y = info.y, z = 0;
-            var newColor = 0;
-            var halfMascLenght = Math.floor(info.mask.length / 2), halfMascRowLenght: number;
+        var thresholding = 10;
 
-            self.gausMaskArray.forEach(function(row, i) {
-                halfMascRowLenght = Math.floor(row.length / 2);
-                row.forEach(function(value, j) {
-                    var red = getColorByCovolution(info.matrix, x + (i - halfMascLenght), y + (j - halfMascRowLenght), ColorType.RED) * self.gausMaskArray[i][j];
-                    var blue = getColorByCovolution(info.matrix, x + (i - halfMascLenght), y + (j - halfMascRowLenght), ColorType.BLUE) * self.gausMaskArray[i][j];
-                    var green = getColorByCovolution(info.matrix, x + (i - halfMascLenght), y + (j - halfMascRowLenght), ColorType.GREEN) * self.gausMaskArray[i][j];
-
-                    newColor += (red + blue + green) / 3;
-                });
-            });
-
-            return newColor / 16;
+        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-LIMIARIZACAO-CINZA", function(info: SegmentationInfo) {
+            var cinza = (info.red + info.blue + info.green) / 3;
+            return cinza > thresholding ? 255 : 0;
         }));
 
         function getColorByCovolution(matrix: Array<Array<Array<number>>>, x: number, y: number, colorType: ColorType): number {
