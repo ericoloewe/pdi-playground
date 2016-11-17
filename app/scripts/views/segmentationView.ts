@@ -25,7 +25,7 @@ class SegmentationView extends View {
     public load() {
         super.load();
 
-        this.fragment.on("load-all", function() {
+        this.fragment.on("load-all", function () {
             this.loadSegmentations();
             this.loadCanvas();
             this.bindEvents();
@@ -39,13 +39,22 @@ class SegmentationView extends View {
     private bindEvents() {
         var self = this;
 
-        this.segmentationManager.picture.on("load-all-values", function() {
+        var $panelFragment = this.fragment.$htmlLoadedWithChilds.siblings(".panel-segmentation");
+
+        this.segmentationManager.picture.on("load-all-values", function () {
             this.enableLoader();
-            setTimeout(function() {
-                this.loadSegmentationsAtScreen();
+            setTimeout(function () {
                 this.disableLoader();
             }.bind(this), 10);
         }.bind(this));
+
+        $panelFragment.find("#thresholding form").on("submit", function (e) {
+            var formData: any = new FormData(this);
+
+            self.applyThresholdingToCanvas(formData.get("filterName"), parseInt(formData.get("thresholding")));
+
+            return e.preventDefault();
+        });
     }
 
     private loadCanvas() {
@@ -58,22 +67,22 @@ class SegmentationView extends View {
     private loadSegmentations() {
         var self = this;
 
-        this.segmentationManager.addSegmentation(new Segmentation("ORIGINAL", function(info: SegmentationInfo) {
+        this.segmentationManager.addSegmentation(new Segmentation("ORIGINAL", function (info: SegmentationInfo) {
             return info.color;
         }));
 
-        this.segmentationManager.addSegmentation(new Segmentation("CINZA", function(info: SegmentationInfo) {
+        this.segmentationManager.addSegmentation(new Segmentation("CINZA", function (info: SegmentationInfo) {
             return (info.red + info.blue + info.green) / 3;
         }));
 
-        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DA-MEDIANA", function(info: SegmentationInfo) {
+        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DA-MEDIANA", function (info: SegmentationInfo) {
             var x = info.x, y = info.y, z = 0;
-            var halfMascLenght = Math.floor(info.mask.length / 2), halfMascRowLenght: number;
+            var halfMascLenght = Math.floor(info.params.mask.length / 2), halfMascRowLenght: number;
             var arrayToCalcMedian = new Array<number>();
 
-            info.mask.forEach(function(row, i) {
+            (<Array<Array<number>>>info.params.mask).forEach(function (row, i) {
                 halfMascRowLenght = Math.floor(row.length / 2);
-                row.forEach(function(value, j) {
+                row.forEach(function (value, j) {
                     arrayToCalcMedian.push(getColorByCovolution(info.matrix, x + (i - halfMascLenght), y + (j - halfMascRowLenght), info.colorType));
                 });
             });
@@ -81,14 +90,14 @@ class SegmentationView extends View {
             return Math.median(arrayToCalcMedian);
         }));
 
-        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DA-MEDIANA-CINZA", function(info: SegmentationInfo) {
+        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DA-MEDIANA-CINZA", function (info: SegmentationInfo) {
             var x = info.x, y = info.y, z = 0;
-            var halfMascLenght = Math.floor(info.mask.length / 2), halfMascRowLenght: number;
+            var halfMascLenght = Math.floor(info.params.mask.length / 2), halfMascRowLenght: number;
             var arrayToCalcMedian = new Array<number>();
 
-            info.mask.forEach(function(row, i) {
+            (<Array<Array<number>>>info.params.mask).forEach(function (row, i) {
                 halfMascRowLenght = Math.floor(row.length / 2);
-                row.forEach(function(value, j) {
+                row.forEach(function (value, j) {
                     var red = getColorByCovolution(info.matrix, x + (i - halfMascLenght), y + (j - halfMascRowLenght), ColorType.RED);
                     var blue = getColorByCovolution(info.matrix, x + (i - halfMascLenght), y + (j - halfMascRowLenght), ColorType.BLUE);
                     var green = getColorByCovolution(info.matrix, x + (i - halfMascLenght), y + (j - halfMascRowLenght), ColorType.GREEN);
@@ -99,14 +108,14 @@ class SegmentationView extends View {
             return Math.median(arrayToCalcMedian);
         }));
 
-        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-GAUSS-CINZA", function(info: SegmentationInfo) {
+        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-GAUSS-CINZA", function (info: SegmentationInfo) {
             var x = info.x, y = info.y, z = 0;
             var newColor = 0;
-            var halfMascLenght = Math.floor(info.mask.length / 2), halfMascRowLenght: number;
+            var halfMascLenght = Math.floor(info.params.mask.length / 2), halfMascRowLenght: number;
 
-            self.gausMaskArray.forEach(function(row, i) {
+            (<Array<Array<number>>>info.params.mask).forEach(function (row, i) {
                 halfMascRowLenght = Math.floor(row.length / 2);
-                row.forEach(function(value, j) {
+                row.forEach(function (value, j) {
                     var red = getColorByCovolution(info.matrix, x + (i - halfMascLenght), y + (j - halfMascRowLenght), ColorType.RED) * self.gausMaskArray[i][j];
                     var blue = getColorByCovolution(info.matrix, x + (i - halfMascLenght), y + (j - halfMascRowLenght), ColorType.BLUE) * self.gausMaskArray[i][j];
                     var green = getColorByCovolution(info.matrix, x + (i - halfMascLenght), y + (j - halfMascRowLenght), ColorType.GREEN) * self.gausMaskArray[i][j];
@@ -118,15 +127,13 @@ class SegmentationView extends View {
             return newColor / 16;
         }));
 
-        var thresholding = 10;
-
-        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-LIMIARIZACAO", function(info: SegmentationInfo) {
-            return info.color > thresholding ? 255 : 0;
+        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-LIMIARIZACAO", function (info: SegmentationInfo) {
+            return info.color > info.params.thresholding ? 255 : 0;
         }));
 
-        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-LIMIARIZACAO-CINZA", function(info: SegmentationInfo) {
+        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-LIMIARIZACAO-CINZA", function (info: SegmentationInfo) {
             var cinza = (info.red + info.blue + info.green) / 3;
-            return cinza > thresholding ? 255 : 0;
+            return cinza > info.params.thresholding ? 255 : 0;
         }));
 
         function getColorByCovolution(matrix: Array<Array<Array<number>>>, x: number, y: number, colorType: ColorType): number {
@@ -150,33 +157,9 @@ class SegmentationView extends View {
         }
     }
 
-    private loadSegmentationsAtScreen() {
-        var self = this;
-        var segmentationList = this.fragment.$htmlLoadedWithChilds.find(".segmentation-list");
-
-        segmentationList.append(this.segmentationManager.getSegmentations().map(function(segmentation) {
-            return $("<li>")
-                .append(this.createCanvasForSegmentation(segmentation, 100, 100))
-                .attr("data-segmentation-name", <string>segmentation.name)
-                .attr("title", <string>segmentation.name)
-                .click(function(e) {
-                    var $canvas = $(this);
-                    self.enableLoader();
-                    self.restoreCanvasImage();
-                    self.segmentationManager.applySegmentationByNameToCanvas($canvas.data("segmentation-name"), self.canvas, self.maskArray);
-                    self.disableLoader();
-                    return e.preventDefault();
-                });
-        }, this));
-    }
-
-    private createCanvasForSegmentation(segmentation: Segmentation, width: number, height: number): HTMLCanvasElement {
-        var canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-
-        this.segmentationManager.applySegmentationByNameToCanvas(segmentation.name, canvas, this.maskArray);
-        return canvas;
+    private applyThresholdingToCanvas(filtername: String, thresholding: number) {
+        this.restoreCanvasImage();
+        this.segmentationManager.applySegmentationByNameToCanvas(filtername, this.canvas, { thresholding: thresholding });
     }
 
     private restoreCanvasImage(canvas: HTMLCanvasElement = this.canvas) {

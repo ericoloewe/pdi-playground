@@ -63,7 +63,7 @@ class PDIPlayGroundApplication extends Application {
                 ]),
             ]), PDIPlayGroundApplication.actualPicture)),
             new Page(new SegmentationView(new Fragment("segmentations", "views/segmentations.html", [
-                new Fragment("nav-segmentations", "views/segmentation/nav-segmentations.html")
+                new Fragment("panel-segmentation", "views/segmentation/panel.html")
             ]), PDIPlayGroundApplication.actualPicture))
         ]);
     }

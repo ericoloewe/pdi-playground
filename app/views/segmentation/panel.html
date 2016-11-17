@@ -1,0 +1,97 @@
+<section class="panel panel-default">
+    <div class="panel-heading">
+        SEGMENTAÇÕES
+    </div>
+    <div class="panel-body">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#thresholding">LIMIARIZAÇÃO</a></li>
+            <li><a data-toggle="tab" href="#matrix">MATRIZ</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="thresholding" class="tab-pane fade in active">
+                <form class="row">
+                    <div class="form-group col-md-6">
+                        <input type="number" name="thresholding" class="form-control">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <select name="filterName" class="form-control">
+                            <option value="FILTRO-DE-LIMIARIZACAO">COLORIDO</option>
+                            <option value="FILTRO-DE-LIMIARIZACAO-CINZA">CINZA</option>
+                        </select>
+                    </div>
+                    <div class="form-action col-md-12">
+                        <button type="submit" class="btn btn-default">APLICAR</button>
+                    </div>
+                </form>
+            </div>
+            <div id="matrix" class="tab-pane fade">
+                <form class="row">
+                    <div class="form-group col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-primary">GAUSS</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">00</span>
+                            <input type="number" name="pos00" class="form-control" value="1">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">01</span>
+                            <input type="number" name="pos01" class="form-control" value="1">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">02</span>
+                            <input type="number" name="pos02" class="form-control" value="1">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">10</span>
+                            <input type="number" name="pos10" class="form-control" value="1">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">11</span>
+                            <input type="number" name="pos11" class="form-control" value="1">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">12</span>
+                            <input type="number" name="pos12" class="form-control" value="1">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">20</span>
+                            <input type="number" name="pos20" class="form-control" value="1">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">21</span>
+                            <input type="number" name="pos21" class="form-control" value="1">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">22</span>
+                            <input type="number" name="pos22" class="form-control" value="1">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-default">APLICAR</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

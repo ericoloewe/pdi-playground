@@ -10,13 +10,13 @@ class SegmentationInfo {
     public y: number;
     public colorType: ColorType;
     public matrix: Array<Array<Array<number>>>;
-    public mask: Array<Array<number>>;
+    public params: any;
 
-    constructor(color: number, colorType: ColorType, matrix: Array<Array<Array<number>>>, mask: Array<Array<number>>, x?: number, y?: number, red?: number, blue?: number, green?: number, alpha?: number) {
+    constructor(color: number, colorType: ColorType, matrix: Array<Array<Array<number>>>, params?: any, x?: number, y?: number, red?: number, blue?: number, green?: number, alpha?: number) {
         this.color = color;
         this.colorType = colorType;
         this.matrix = matrix;
-        this.mask = mask;
+        this.params = params;
         this.x = x;
         this.y = y;
         this.red = red;
