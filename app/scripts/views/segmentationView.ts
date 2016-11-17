@@ -18,7 +18,6 @@ class SegmentationView extends View {
         this.segmentationManager = new SegmentationManager(picture);
         this.canvasHeight = 650;
         this.canvasWidth = 650;
-        this.maskArray = [[1, 1, 1], [1, 1, 1], [1, 1, 1]];
         this.gausMaskArray = [[1, 2, 1], [2, 4, 2], [1, 2, 1]];
     }
 
@@ -55,6 +54,43 @@ class SegmentationView extends View {
 
             return e.preventDefault();
         });
+
+        $panelFragment.find("#matrix form").on("submit", function (e) {
+            var formData: any = new FormData(this);
+            var matrix = new Array<Array<number>>([], [], []);
+
+            matrix[0][0] = parseFloat(formData.get("pos00"));
+            matrix[0][1] = parseFloat(formData.get("pos01"));
+            matrix[0][2] = parseFloat(formData.get("pos02"));
+            matrix[1][0] = parseFloat(formData.get("pos10"));
+            matrix[1][1] = parseFloat(formData.get("pos11"));
+            matrix[1][2] = parseFloat(formData.get("pos12"));
+            matrix[2][0] = parseFloat(formData.get("pos20"));
+            matrix[2][1] = parseFloat(formData.get("pos21"));
+            matrix[2][2] = parseFloat(formData.get("pos22"));
+
+            self.applyCovolutionToCanvas(formData.get("filterName"), matrix);
+
+            return e.preventDefault();
+        });
+
+        $panelFragment.find("#matrix .btn-load-gauss-matrix").on("click", function (e) {
+            var $form = $panelFragment.find("#matrix form");
+
+            $form.find("[name=pos00]").val(self.gausMaskArray[0][0]);
+            $form.find("[name=pos01]").val(self.gausMaskArray[0][1]);
+            $form.find("[name=pos02]").val(self.gausMaskArray[0][2]);
+            $form.find("[name=pos10]").val(self.gausMaskArray[1][0]);
+            $form.find("[name=pos11]").val(self.gausMaskArray[1][1]);
+            $form.find("[name=pos12]").val(self.gausMaskArray[1][2]);
+            $form.find("[name=pos20]").val(self.gausMaskArray[2][0]);
+            $form.find("[name=pos21]").val(self.gausMaskArray[2][1]);
+            $form.find("[name=pos22]").val(self.gausMaskArray[2][2]);
+
+            $form.find("[name=filterName]").val("FILTRO-DE-GAUSS");
+
+            return e.preventDefault();
+        })
     }
 
     private loadCanvas() {
@@ -106,6 +142,21 @@ class SegmentationView extends View {
             });
 
             return Math.median(arrayToCalcMedian);
+        }));
+
+        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-GAUSS", function (info: SegmentationInfo) {
+            var x = info.x, y = info.y, z = 0;
+            var newColor = 0;
+            var halfMascLenght = Math.floor(info.params.mask.length / 2), halfMascRowLenght: number;
+
+            (<Array<Array<number>>>info.params.mask).forEach(function (row, i) {
+                halfMascRowLenght = Math.floor(row.length / 2);
+                row.forEach(function (value, j) {
+                    newColor += getColorByCovolution(info.matrix, x + (i - halfMascLenght), y + (j - halfMascRowLenght), info.colorType) * self.gausMaskArray[i][j];
+                });
+            });
+
+            return newColor / 16;
         }));
 
         this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-GAUSS-CINZA", function (info: SegmentationInfo) {
@@ -162,6 +213,11 @@ class SegmentationView extends View {
         this.segmentationManager.applySegmentationByNameToCanvas(filtername, this.canvas, { thresholding: thresholding });
     }
 
+    private applyCovolutionToCanvas(filtername: String, matrix: Array<Array<number>>) {
+        this.restoreCanvasImage();
+        this.segmentationManager.applySegmentationByNameToCanvas(filtername, this.canvas, { mask: matrix });
+    }
+
     private restoreCanvasImage(canvas: HTMLCanvasElement = this.canvas) {
         CanvasUtil.reziseImageCanvas(this.canvas, this.segmentationManager.picture.getHtmlImage(), this.canvas.width, this.canvas.height);
     }
@@ -181,7 +237,6 @@ class SegmentationView extends View {
                 $("<i>").addClass("glyphicon glyphicon-repeat rotate-infinite icon-loading icon-loading-center")
                 )
             );
-
     }
 
     private disableLoader() {
