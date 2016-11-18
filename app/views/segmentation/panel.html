@@ -6,6 +6,7 @@
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#thresholding">LIMIARIZAÇÃO</a></li>
             <li><a data-toggle="tab" href="#matrix">MATRIZ</a></li>
+            <li><a data-toggle="tab" href="#border">BORDA</a></li>
         </ul>
         <div class="tab-content">
             <div id="thresholding" class="tab-pane fade in active">
@@ -97,8 +98,24 @@
                         <div class="col-md-12">
                             <button type="submit" class="btn btn-default">APLICAR</button>
                         </div>
+                    </div>
                 </form>
-                </div>
+            </div>
+            <div id="border" class="tab-pane fade">
+                <form class="row">
+                    <div class="form-group col-md-6">
+                        <input type="number" name="thresholding" class="form-control">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <select name="filterName" class="form-control">
+                            <option value="FILTRO-DE-BORDAS-DE-SOBEL-CINZA">CINZA</option>
+                            <option value="FILTRO-DE-BORDAS-DE-SOBEL">COLORIDO</option>
+                        </select>
+                    </div>
+                    <div class="form-action col-md-12">
+                        <button type="submit" class="btn btn-default">APLICAR</button>
+                    </div>
+                </form>
             </div>
         </div>
 </section>

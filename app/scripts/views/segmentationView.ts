@@ -90,7 +90,15 @@ class SegmentationView extends View {
             $form.find("[name=filterName]").val("FILTRO-DE-GAUSS");
 
             return e.preventDefault();
-        })
+        });
+
+        $panelFragment.find("#border form").on("submit", function (e) {
+            var formData: any = new FormData(this);
+            e.preventDefault()
+            self.applyBorderToCanvas(formData.get("filterName"), parseInt(formData.get("thresholding")));
+
+            return e.preventDefault();
+        });
     }
 
     private loadCanvas() {
@@ -187,6 +195,45 @@ class SegmentationView extends View {
             return cinza > info.params.thresholding ? 255 : 0;
         }));
 
+        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-BORDAS-DE-SOBEL", function (info: SegmentationInfo) {
+            var x = info.x, y = info.y;
+            var newColor = 0, newColorX = 0, newColorY = 0, actualColor: number;
+
+            for (var i = 0; i < 3; i++) {
+                for (var j = 0; i < 3; j++) {
+                    actualColor = getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), info.colorType);
+                    newColorX += actualColor * info.params.xMatrix[i][j];
+                    newColorY += actualColor * info.params.yMatrix[i][j];
+                }
+            }
+
+            newColor = Math.sqrt(Math.pow(newColorX, 2) + Math.pow(newColorY, 2));
+
+            return (newColor > info.params.thresholding) ? 255 : 0;
+        }));
+
+        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-BORDAS-DE-SOBEL-CINZA", function (info: SegmentationInfo) {
+            var x = info.x, y = info.y;
+            var newColor = 0, newColorX = 0, newColorY = 0, red: number, blue: number, green: number, cinza: number;
+
+            for (var i = 0; i < 3; i++) {
+                for (var j = 0; i < 3; j++) {
+                    red = getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), ColorType.RED);
+                    blue = getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), ColorType.BLUE);
+                    green = getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), ColorType.GREEN);
+
+                    cinza = (red + blue + green) / 3;
+
+                    newColorX += cinza * info.params.xMatrix[i][j];
+                    newColorY += cinza * info.params.yMatrix[i][j];
+                }
+            }
+
+            newColor = Math.sqrt(Math.pow(newColorX, 2) + Math.pow(newColorY, 2));
+
+            return (newColor > info.params.thresholding) ? 255 : 0;
+        }));
+
         function getColorByCovolution(matrix: Array<Array<Array<number>>>, x: number, y: number, colorType: ColorType): number {
             var realX = x, realY = y;
             var width = matrix[0].length - 2;
@@ -216,6 +263,31 @@ class SegmentationView extends View {
     private applyCovolutionToCanvas(filtername: String, matrix: Array<Array<number>>) {
         this.restoreCanvasImage();
         this.segmentationManager.applySegmentationByNameToCanvas(filtername, this.canvas, { mask: matrix });
+    }
+
+    private applyBorderToCanvas(filtername: String, thresholding: number) {
+        this.restoreCanvasImage();
+        this.segmentationManager.applySegmentationByNameToCanvas(filtername, this.canvas, this.getParamsForBorderFilter(filtername));
+    }
+
+    private getParamsForBorderFilter(filtername: String): Object {
+        var params: any = {};
+
+        switch (filtername) {
+            case "FILTRO-DE-BORDAS-DE-SOBEL-CINZA":
+            case "FILTRO-DE-BORDAS-DE-SOBEL": {
+                params.xMatrix = [[1, 0, -1], [2, 0, -2], [1, 0, -1]];
+                params.yMatrix = [[1, 2, 1], [0, 0, 0], [-1, -2, -1]];
+                break;
+            }
+
+            default: {
+
+                break;
+            }
+        }
+
+        return params;
     }
 
     private restoreCanvasImage(canvas: HTMLCanvasElement = this.canvas) {
