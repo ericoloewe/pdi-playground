@@ -8,7 +8,7 @@ class Picture {
     public context: any;
     private image: HTMLImageElement;
     public imageData: ImageData;
-    private imageMatrix: Array<Array<Array<number>>>;
+    public imageMatrix: Array<Array<Array<number>>>;
     public red: ColorInfo;
     public green: ColorInfo;
     public blue: ColorInfo;

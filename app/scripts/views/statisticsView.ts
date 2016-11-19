@@ -1,4 +1,5 @@
 /// <reference path="../models/picture.ts" />
+/// <reference path="../references/chartist/main.ts" />
 /// <reference path="view.ts" />
 "use strict";
 
@@ -11,28 +12,31 @@ class StatisticsView extends View {
         super(fragment);
 
         this.picture = picture;
-        this.bindEvents();
+    }
+
+    public load() {
+        super.load();
+
         this.loadCanvas();
+        this.bindEvents();
     }
 
     private loadCanvas() {
-        var self = this;
-        this.fragment.on("load-all", function () {
-            self.$canvasSection = self.fragment.$htmlLoadedWithChilds.find("#STATISTICS_CANVAS_SECTION");
-            var canvas = CanvasUtil.createCustomCanvas(512, 512, self.picture.getHtmlImage(), "STATISTICS_CANVAS", "pdi-canvas");
-            self.canvas = canvas;
-            self.$canvasSection.append(canvas);
-        });
+        this.fragment.on("load-all", function() {
+            this.$canvasSection = this.fragment.$htmlLoadedWithChilds.find("#STATISTICS_CANVAS_SECTION");
+            var canvas = CanvasUtil.createCustomCanvas(512, 512, this.picture.getHtmlImage(), "STATISTICS_CANVAS", "pdi-canvas");
+            this.canvas = canvas;
+            this.$canvasSection.append(canvas);
+        }.bind(this));
     }
 
     private bindEvents() {
-        var self = this;
-
-        this.picture.on("load-all-values", function () {
-            self.defineStatistics();
-            self.openCharts();
-            self.render();
-        });
+        this.picture.on("load-all-values", function() {
+            setTimeout(function() {
+                this.defineStatistics();
+                this.openCharts();
+            }.bind(this), 10);
+        }.bind(this));
     }
 
     private defineStatistics() {

@@ -1,11 +1,26 @@
+/// <reference path="../references/jquery/main.ts" />
+/// <reference path="../views/view.ts" />
+"use strict";
+
+interface PageableView {
+    load(): void;
+    unload(): void;
+}
+
+enum PageType {
+    COMMON,
+    PARTIAL
+}
 
 class Page {
     public view: View;
     public enabled: boolean;
+    public type: PageType;
 
-    constructor(view: View, enabled: boolean = false) {
+    constructor(view: View, enabled: boolean = false, type: PageType = PageType.COMMON) {
         this.view = view;
         this.enabled = enabled;
+        this.type = type;
     }
 }
 
@@ -19,7 +34,7 @@ class PageManager {
     }
 
     public addAllPages(pages: Array<Page>) {
-        pages.forEach(function (page) {
+        pages.forEach(function(page) {
             this.addPage(page);
         }, this);
     }
@@ -32,7 +47,7 @@ class PageManager {
     }
 
     public removeAllPages(pages: Array<Page>) {
-        pages.forEach(function (page) {
+        pages.forEach(function(page) {
             this.removePage(page);
         }, this);
     }
@@ -45,7 +60,7 @@ class PageManager {
     }
 
     public activePageByName(name: String) {
-        this.pages.forEach(function (page) {
+        this.pages.forEach(function(page) {
             if (page.view.fragment.name === name) {
                 this.activePage(page);
             }
@@ -56,7 +71,9 @@ class PageManager {
         var self = this;
         var fatherFragment = page.view.fragment;
 
-        fatherFragment.on("load-all", function () {
+        page.view.load();
+
+        fatherFragment.on("load-all", function() {
             if ($(self.buildSelectorPageFor(fatherFragment)).length) {
                 $(self.buildSelectorPageFor(fatherFragment)).append(fatherFragment.$htmlLoadedWithChilds);
             } else {
@@ -83,8 +100,11 @@ class PageManager {
         $("[data-pages]").empty();
         $("[data-pages]").attr("data-actual-page", "");
 
-        this.pages.forEach(function (page) {
+        this.pages.forEach(function(page) {
             $("[data-pages]").removeClass(String.format("{0}-page", page.view.fragment.name));
+            if (page.type !== PageType.PARTIAL) {
+                page.view.unload();
+            }
         });
     }
 
@@ -104,7 +124,7 @@ class PageManager {
     private enableLinks() {
         var self = this;
 
-        $("[data-page-link]").click(function () {
+        $("[data-page-link]").click(function() {
             var link = $(this);
             self.activeLink(link);
             var href = link.attr("href");

@@ -1,36 +1,44 @@
+/// <reference path="../references/jquery/main.ts" />
 /// <reference path="../config/fragments.ts" />
+/// <reference path="../config/pages.ts" />
 
 "use strict";
 
-class View {
+class View implements PageableView {
     protected scope: any;
     protected $scope: JQuery;
     private isRefreshingScope: Boolean;
+    private scopeInterval: number;
     public fragment: Fragment;
 
     public constructor(fragment: Fragment) {
-        var self = this;
         this.scope = new Object();
         this.$scope = $();
         this.fragment = fragment;
         this.isRefreshingScope = false;
+    }
 
-        this.fragment.on("load-all", function () {
-            setTimeout(function () {
-                self.setScopes();
-                setInterval(function () {
-                    if (!self.isRefreshingScope) {
-                        self.refreshScopes();
+    public load() {
+        this.fragment.on("load-all", function() {
+            setTimeout(function() {
+                this.setScopes();
+                this.scopeInterval = setInterval(function() {
+                    if (!this.isRefreshingScope) {
+                        this.refreshScopes();
                     }
-                }, 500);
-            }, 100);
-        });
+                }.bind(this), 500);
+            }.bind(this), 100);
+        }.bind(this));
+    }
+
+    public unload() {
+        clearInterval(this.scopeInterval);
     }
 
     public setScopes() {
         this.$scope = this.fragment.$htmlLoadedWithChilds.find("[data-scope]");
 
-        this.$scope.each(function () {
+        this.$scope.each(function() {
             var $element = $(this);
             $element.attr("data-scope", $element.html());
         });
@@ -44,7 +52,7 @@ class View {
 
     private refreshScopes() {
         this.isRefreshingScope = true;
-        this.$scope.each(function () {
+        this.$scope.each(function() {
             var $element = $(this);
             var dataScope = $element.attr("data-scope");
             $element.html(dataScope);
@@ -63,7 +71,7 @@ class View {
                 }
             } else {
                 var selector = `{{${parents}.${d}}}`;
-                this.$scope.each(function () {
+                this.$scope.each(function() {
                     var $element = $(this);
                     $element.html($element.html().replace(selector, data[d]));
                 });
