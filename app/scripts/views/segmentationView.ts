@@ -50,7 +50,11 @@ class SegmentationView extends View {
         $panelFragment.find("#thresholding form").on("submit", function (e) {
             var formData: any = new FormData(this);
 
+            self.enableLoader();
+
             self.applyThresholdingToCanvas(formData.get("filterName"), parseInt(formData.get("thresholding")));
+
+            self.disableLoader();
 
             return e.preventDefault();
         });
@@ -58,6 +62,8 @@ class SegmentationView extends View {
         $panelFragment.find("#matrix form").on("submit", function (e) {
             var formData: any = new FormData(this);
             var matrix = new Array<Array<number>>([], [], []);
+
+            self.enableLoader();
 
             matrix[0][0] = parseFloat(formData.get("pos00"));
             matrix[0][1] = parseFloat(formData.get("pos01"));
@@ -70,6 +76,8 @@ class SegmentationView extends View {
             matrix[2][2] = parseFloat(formData.get("pos22"));
 
             self.applyCovolutionToCanvas(formData.get("filterName"), matrix);
+
+            self.disableLoader();
 
             return e.preventDefault();
         });
@@ -94,8 +102,12 @@ class SegmentationView extends View {
 
         $panelFragment.find("#border form").on("submit", function (e) {
             var formData: any = new FormData(this);
-            e.preventDefault()
+            
+            self.enableLoader();
+
             self.applyBorderToCanvas(formData.get("filterName"), parseInt(formData.get("thresholding")));
+
+            self.disableLoader();
 
             return e.preventDefault();
         });
@@ -110,14 +122,6 @@ class SegmentationView extends View {
 
     private loadSegmentations() {
         var self = this;
-
-        this.segmentationManager.addSegmentation(new Segmentation("ORIGINAL", function (info: SegmentationInfo) {
-            return info.color;
-        }));
-
-        this.segmentationManager.addSegmentation(new Segmentation("CINZA", function (info: SegmentationInfo) {
-            return (info.red + info.blue + info.green) / 3;
-        }));
 
         this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DA-MEDIANA", function (info: SegmentationInfo) {
             var x = info.x, y = info.y;
