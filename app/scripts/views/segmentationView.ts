@@ -120,7 +120,7 @@ class SegmentationView extends View {
         }));
 
         this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DA-MEDIANA", function (info: SegmentationInfo) {
-            var x = info.x, y = info.y, z = 0;
+            var x = info.x, y = info.y;
             var halfMascLenght = Math.floor(info.params.mask.length / 2), halfMascRowLenght: number;
             var arrayToCalcMedian = new Array<number>();
 
@@ -135,7 +135,7 @@ class SegmentationView extends View {
         }));
 
         this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DA-MEDIANA-CINZA", function (info: SegmentationInfo) {
-            var x = info.x, y = info.y, z = 0;
+            var x = info.x, y = info.y;
             var halfMascLenght = Math.floor(info.params.mask.length / 2), halfMascRowLenght: number;
             var arrayToCalcMedian = new Array<number>();
 
@@ -153,7 +153,7 @@ class SegmentationView extends View {
         }));
 
         this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-GAUSS", function (info: SegmentationInfo) {
-            var x = info.x, y = info.y, z = 0;
+            var x = info.x, y = info.y;
             var newColor = 0;
             var halfMascLenght = Math.floor(info.params.mask.length / 2), halfMascRowLenght: number;
 
@@ -168,7 +168,7 @@ class SegmentationView extends View {
         }));
 
         this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-GAUSS-CINZA", function (info: SegmentationInfo) {
-            var x = info.x, y = info.y, z = 0;
+            var x = info.x, y = info.y;
             var newColor = 0;
             var halfMascLenght = Math.floor(info.params.mask.length / 2), halfMascRowLenght: number;
 
