@@ -200,7 +200,7 @@ class SegmentationView extends View {
             var newColor = 0, newColorX = 0, newColorY = 0, actualColor: number;
 
             for (var i = 0; i < 3; i++) {
-                for (var j = 0; i < 3; j++) {
+                for (var j = 0; j < 3; j++) {
                     actualColor = getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), info.colorType);
                     newColorX += actualColor * info.params.xMatrix[i][j];
                     newColorY += actualColor * info.params.yMatrix[i][j];
@@ -217,7 +217,7 @@ class SegmentationView extends View {
             var newColor = 0, newColorX = 0, newColorY = 0, red: number, blue: number, green: number, cinza: number;
 
             for (var i = 0; i < 3; i++) {
-                for (var j = 0; i < 3; j++) {
+                for (var j = 0; j < 3; j++) {
                     red = getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), ColorType.RED);
                     blue = getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), ColorType.BLUE);
                     green = getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), ColorType.GREEN);
@@ -266,8 +266,10 @@ class SegmentationView extends View {
     }
 
     private applyBorderToCanvas(filtername: String, thresholding: number) {
+        var params: any = this.getParamsForBorderFilter(filtername);
+        params.thresholding = thresholding;
         this.restoreCanvasImage();
-        this.segmentationManager.applySegmentationByNameToCanvas(filtername, this.canvas, this.getParamsForBorderFilter(filtername));
+        this.segmentationManager.applySegmentationByNameToCanvas(filtername, this.canvas, params);
     }
 
     private getParamsForBorderFilter(filtername: String): Object {
@@ -282,8 +284,7 @@ class SegmentationView extends View {
             }
 
             default: {
-
-                break;
+                throw new Error(String.format("no params for filter: {0}", filtername));
             }
         }
 
