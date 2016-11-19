@@ -234,6 +234,45 @@ class SegmentationView extends View {
             return (newColor > info.params.thresholding) ? 255 : 0;
         }));
 
+        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-BORDAS-DE-ROBERTS", function (info: SegmentationInfo) {
+            var x = info.x, y = info.y;
+            var newColor = 0, newColorX = 0, newColorY = 0, actualColor: number;
+
+            for (var i = 0; i < 3; i++) {
+                for (var j = 0; j < 3; j++) {
+                    actualColor = getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), info.colorType);
+                    newColorX += actualColor * info.params.xMatrix[i][j];
+                    newColorY += actualColor * info.params.yMatrix[i][j];
+                }
+            }
+
+            newColor = Math.sqrt(Math.pow(newColorX, 2) + Math.pow(newColorY, 2));
+
+            return (newColor > info.params.thresholding) ? 255 : 0;
+        }));
+
+        this.segmentationManager.addSegmentation(new Segmentation("FILTRO-DE-BORDAS-DE-ROBERTS-CINZA", function (info: SegmentationInfo) {
+            var x = info.x, y = info.y;
+            var newColor = 0, newColorX = 0, newColorY = 0, red: number, blue: number, green: number, cinza: number;
+
+            for (var i = 0; i < 3; i++) {
+                for (var j = 0; j < 3; j++) {
+                    red = getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), ColorType.RED);
+                    blue = getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), ColorType.BLUE);
+                    green = getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), ColorType.GREEN);
+
+                    cinza = (red + blue + green) / 3;
+
+                    newColorX += cinza * info.params.xMatrix[i][j];
+                    newColorY += cinza * info.params.yMatrix[i][j];
+                }
+            }
+
+            newColor = Math.sqrt(Math.pow(newColorX, 2) + Math.pow(newColorY, 2));
+
+            return (newColor > info.params.thresholding) ? 255 : 0;
+        }));
+
         function getColorByCovolution(matrix: Array<Array<Array<number>>>, x: number, y: number, colorType: ColorType): number {
             var realX = x, realY = y;
             var width = matrix[0].length - 2;
@@ -276,6 +315,13 @@ class SegmentationView extends View {
         var params: any = {};
 
         switch (filtername) {
+            case "FILTRO-DE-BORDAS-DE-ROBERTS-CINZA":
+            case "FILTRO-DE-BORDAS-DE-ROBERTS": {
+                params.xMatrix = [[0, 0, 0], [0, -1, 0], [0, 0, 1]];
+                params.yMatrix = [[0, 0, 0], [0, 0, -1], [0, 1, 0]];
+                break;
+            }
+
             case "FILTRO-DE-BORDAS-DE-SOBEL-CINZA":
             case "FILTRO-DE-BORDAS-DE-SOBEL": {
                 params.xMatrix = [[1, 0, -1], [2, 0, -2], [1, 0, -1]];
