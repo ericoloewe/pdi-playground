@@ -9,12 +9,15 @@ class HomeView extends View {
 
     public constructor(fragment: Fragment) {
         super(fragment);
-        var self = this;
-        
+    }
+
+    public load() {
+        super.load();
+
         this.fragment.on("load-all", function () {
-            self.fetchElements();
-            self.bindEvents();
-        });        
+            this.fetchElements();
+            this.bindEvents();
+        }.bind(this));
     }
 
     private fetchElements() {

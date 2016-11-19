@@ -1,0 +1,19 @@
+// ========================================================================
+// SEGMENTATION
+// ========================================================================
+.segmentations-page {
+    .panel-segmentation {
+        position: fixed;
+        width: 400px;
+        height: 400px;
+        top: 100px;
+        right: 50px;
+        #thresholding,
+        #matrix {
+            padding: 10px 0;
+            .btn {
+                width: 100%;
+            }
+        }
+    }
+}
