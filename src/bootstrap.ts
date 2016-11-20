@@ -8,11 +8,12 @@ class Bootstrap {
     private controllers: Array<Controller>;
 
     constructor() {
+        this.controllers = new Array<Controller>();
         this.startApp();
-        this.startControllers();
     }
 
     public startApp() {
+        this.startControllers();
         this.mainApp = new ElectronApp();
     }
 

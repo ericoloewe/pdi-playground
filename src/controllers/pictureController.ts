@@ -1,6 +1,6 @@
 "use strict";
 
-import { Controller } from "controller";
+import { Controller } from "./controller";
 
 export class PictureController extends Controller {
     constructor() {
