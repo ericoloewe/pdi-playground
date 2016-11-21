@@ -24,7 +24,7 @@ gulp.task("scripts:vendors", function () {
         .pipe(concat("vendors.js"))
         .pipe(gulp.dest(paths.dest))
         .pipe(rename({ suffix: ".min" }))
-        .pipe(uglify())
+        // .pipe(uglify())
         .pipe(gulp.dest(paths.dest));
 });
 
@@ -34,7 +34,7 @@ gulp.task("scripts", ["scripts:vendors"], function () {
         .pipe(concat("app.js"))
         .pipe(gulp.dest(paths.dest))
         .pipe(rename({ suffix: ".min" }))
-        .pipe(uglify())
+        // .pipe(uglify())
         .pipe(gulp.dest(paths.dest));
 });
 
