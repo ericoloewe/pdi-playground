@@ -10,11 +10,9 @@ export class Controller {
     private bindIpcMainEvents() {
         var constrollerName = this.constructor.toString().match(/\w+/g)[1].toLowerCase().split("controller")[0];
 
-        for (var prop in this) {
-            if (typeof (this[prop]) === "function" && prop !== "constructor") {
-                ipcMain.on(`electron-request:${constrollerName}:${prop}`, function () {
-
-                });
+        for (var action in this) {
+            if (typeof (this[action]) === "function" && action !== "constructor") {
+                ipcMain.on(`electron-request:${constrollerName}:${action}`, (event, args) => event.sender.send(`electron-response:${constrollerName}:${action}`, this[action](args)));
             }
         }
     }
