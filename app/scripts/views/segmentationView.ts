@@ -2,6 +2,7 @@
 /// <reference path="../managers/segmentationManager.ts" />
 /// <reference path="../models/segmentationInfo.ts" />
 /// <reference path="../utils/math.ts" />
+/// <reference path="../controllers/controller.ts" />
 "use strict";
 
 class SegmentationView extends View {
@@ -13,7 +14,7 @@ class SegmentationView extends View {
     private gausMaskArray: Array<Array<number>>;
 
     public constructor(fragment: Fragment, picture: Picture) {
-        super(fragment);
+        super(new Controller(), fragment);
 
         this.segmentationManager = new SegmentationManager(picture);
         this.canvasHeight = 650;
@@ -102,7 +103,7 @@ class SegmentationView extends View {
 
         $panelFragment.find("#border form").on("submit", function (e) {
             var formData: any = new FormData(this);
-            
+
             self.enableLoader();
 
             self.applyBorderToCanvas(formData.get("filterName"), parseInt(formData.get("thresholding")));

@@ -1,4 +1,5 @@
 /// <reference path="../models/picture.ts" />
+/// <reference path="../controllers/controller.ts" />
 /// <reference path="view.ts" />
 "use strict";
 
@@ -8,7 +9,7 @@ class HomeView extends View {
     private $inputLoadAnimage: JQuery;
 
     public constructor(fragment: Fragment) {
-        super(fragment);
+        super(new Controller(), fragment);
     }
 
     public load() {

@@ -9,20 +9,22 @@ class View implements PageableView {
     protected $scope: JQuery;
     private isRefreshingScope: Boolean;
     private scopeInterval: number;
+    private controller: Controller;
     public fragment: Fragment;
 
-    public constructor(fragment: Fragment) {
+    public constructor(fragment: Fragment, controller: Controller= new Controller()) {
         this.scope = new Object();
         this.$scope = $();
+        this.controller = controller;
         this.fragment = fragment;
         this.isRefreshingScope = false;
     }
 
     public load() {
-        this.fragment.on("load-all", function() {
-            setTimeout(function() {
+        this.fragment.on("load-all", function () {
+            setTimeout(function () {
                 this.setScopes();
-                this.scopeInterval = setInterval(function() {
+                this.scopeInterval = setInterval(function () {
                     if (!this.isRefreshingScope) {
                         this.refreshScopes();
                     }
@@ -38,7 +40,7 @@ class View implements PageableView {
     public setScopes() {
         this.$scope = this.fragment.$htmlLoadedWithChilds.find("[data-scope]");
 
-        this.$scope.each(function() {
+        this.$scope.each(function () {
             var $element = $(this);
             $element.attr("data-scope", $element.html());
         });
@@ -52,7 +54,7 @@ class View implements PageableView {
 
     private refreshScopes() {
         this.isRefreshingScope = true;
-        this.$scope.each(function() {
+        this.$scope.each(function () {
             var $element = $(this);
             var dataScope = $element.attr("data-scope");
             $element.html(dataScope);
@@ -71,7 +73,7 @@ class View implements PageableView {
                 }
             } else {
                 var selector = `{{${parents}.${d}}}`;
-                this.$scope.each(function() {
+                this.$scope.each(function () {
                     var $element = $(this);
                     $element.html($element.html().replace(selector, data[d]));
                 });

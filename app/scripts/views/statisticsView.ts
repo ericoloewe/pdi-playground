@@ -1,4 +1,5 @@
 /// <reference path="../models/picture.ts" />
+/// <reference path="../controllers/statisticsController.ts" />
 /// <reference path="../references/chartist/main.ts" />
 /// <reference path="view.ts" />
 "use strict";
@@ -9,7 +10,7 @@ class StatisticsView extends View {
     private $canvasSection: JQuery;
 
     public constructor(fragment: Fragment, picture: Picture) {
-        super(fragment);
+        super(new StatisticsController(), fragment);
 
         this.picture = picture;
     }
@@ -22,7 +23,7 @@ class StatisticsView extends View {
     }
 
     private loadCanvas() {
-        this.fragment.on("load-all", function() {
+        this.fragment.on("load-all", function () {
             this.$canvasSection = this.fragment.$htmlLoadedWithChilds.find("#STATISTICS_CANVAS_SECTION");
             var canvas = CanvasUtil.createCustomCanvas(512, 512, this.picture.getHtmlImage(), "STATISTICS_CANVAS", "pdi-canvas");
             this.canvas = canvas;
@@ -31,8 +32,8 @@ class StatisticsView extends View {
     }
 
     private bindEvents() {
-        this.picture.on("load-all-values", function() {
-            setTimeout(function() {
+        this.picture.on("load-all-values", function () {
+            setTimeout(function () {
                 this.defineStatistics();
                 this.openCharts();
             }.bind(this), 10);
