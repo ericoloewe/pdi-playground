@@ -10,9 +10,11 @@ class StatisticsView extends View {
     private $canvasSection: JQuery;
 
     public constructor(fragment: Fragment, picture: Picture) {
-        super(new StatisticsController(), fragment);
+        super(fragment, new StatisticsController());
 
         this.picture = picture;
+        this.defineStatistics();
+        this.openCharts();
     }
 
     public load() {
@@ -32,12 +34,7 @@ class StatisticsView extends View {
     }
 
     private bindEvents() {
-        this.picture.on("load-all-values", function () {
-            setTimeout(function () {
-                this.defineStatistics();
-                this.openCharts();
-            }.bind(this), 10);
-        }.bind(this));
+        (<StatisticsController>this.controller).loadPicture();
     }
 
     private defineStatistics() {

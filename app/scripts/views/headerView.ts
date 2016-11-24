@@ -6,6 +6,6 @@
 class HeaderView extends View {
 
     public constructor(fragment: Fragment) {
-        super(new Controller(), fragment);
+        super(fragment);
     }
 }

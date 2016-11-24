@@ -1,6 +1,7 @@
 /// <reference path="../references/jquery/main.ts" />
 /// <reference path="../config/fragments.ts" />
 /// <reference path="../config/pages.ts" />
+/// <reference path="../controllers/controller.ts" />
 
 "use strict";
 
@@ -9,10 +10,10 @@ class View implements PageableView {
     protected $scope: JQuery;
     private isRefreshingScope: Boolean;
     private scopeInterval: number;
-    private controller: Controller;
+    protected controller: Controller;
     public fragment: Fragment;
 
-    public constructor(fragment: Fragment, controller: Controller= new Controller()) {
+    public constructor(fragment: Fragment, controller: Controller = new Controller()) {
         this.scope = new Object();
         this.$scope = $();
         this.controller = controller;

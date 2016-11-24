@@ -14,7 +14,7 @@ class SegmentationView extends View {
     private gausMaskArray: Array<Array<number>>;
 
     public constructor(fragment: Fragment, picture: Picture) {
-        super(new Controller(), fragment);
+        super(fragment);
 
         this.segmentationManager = new SegmentationManager(picture);
         this.canvasHeight = 650;

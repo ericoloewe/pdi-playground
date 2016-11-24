@@ -16,7 +16,7 @@ class FilterView extends View {
     private $canvasSection: JQuery;
 
     public constructor(fragment: Fragment, image: Picture) {
-        super(new Controller(), fragment);
+        super(fragment);
 
         this.filterManager = new FilterManager(image);
         this.canvasHeight = 650;

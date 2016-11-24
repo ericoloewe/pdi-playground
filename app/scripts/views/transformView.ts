@@ -12,7 +12,7 @@ class TransformView extends View {
     private $canvasSection: JQuery;
 
     public constructor(fragment: Fragment, picture: Picture) {
-        super(new Controller(), fragment);
+        super(fragment);
 
         this.transformManager = new TransformManager(picture);
         this.canvasHeight = 650;

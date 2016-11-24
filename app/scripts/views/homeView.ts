@@ -9,7 +9,7 @@ class HomeView extends View {
     private $inputLoadAnimage: JQuery;
 
     public constructor(fragment: Fragment) {
-        super(new Controller(), fragment);
+        super(fragment);
     }
 
     public load() {

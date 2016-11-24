@@ -7,4 +7,8 @@ class StatisticsController extends Controller {
     public constructor(view?: View) {
         super(view, new PictureResource());
     }
+    
+    public loadPicture() {
+
+    }
 }
