@@ -19,10 +19,10 @@ class View implements PageableView {
     }
 
     public load() {
-        this.fragment.on("load-all", function() {
-            setTimeout(function() {
+        this.fragment.on("load-all", function () {
+            setTimeout(function () {
                 this.setScopes();
-                this.scopeInterval = setInterval(function() {
+                this.scopeInterval = setInterval(function () {
                     if (!this.isRefreshingScope) {
                         this.refreshScopes();
                     }
@@ -38,7 +38,7 @@ class View implements PageableView {
     public setScopes() {
         this.$scope = this.fragment.$htmlLoadedWithChilds.find("[data-scope]");
 
-        this.$scope.each(function() {
+        this.$scope.each(function () {
             var $element = $(this);
             $element.attr("data-scope", $element.html());
         });
@@ -52,7 +52,7 @@ class View implements PageableView {
 
     private refreshScopes() {
         this.isRefreshingScope = true;
-        this.$scope.each(function() {
+        this.$scope.each(function () {
             var $element = $(this);
             var dataScope = $element.attr("data-scope");
             $element.html(dataScope);
@@ -71,11 +71,35 @@ class View implements PageableView {
                 }
             } else {
                 var selector = `{{${parents}.${d}}}`;
-                this.$scope.each(function() {
+                this.$scope.each(function () {
                     var $element = $(this);
                     $element.html($element.html().replace(selector, data[d]));
                 });
             }
+        }
+    }
+
+    private enableLoader() {
+        var $icon = $("body").find(".icon-loading-shadow");
+
+        if ($icon.length > 0) {
+            $icon.remove();
+        }
+
+        $("body")
+            .append(
+            $("<div>")
+                .addClass("icon-loading-shadow")
+                .append(
+                $("<i>").addClass("glyphicon glyphicon-repeat rotate-infinite icon-loading icon-loading-center")
+                )
+            );
+    }
+
+    private disableLoader() {
+        var $icon = $("body").find(".icon-loading-shadow");
+        if ($icon.length > 0) {
+            $icon.remove();
         }
     }
 }
