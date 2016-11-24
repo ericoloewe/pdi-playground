@@ -3,6 +3,15 @@
     "files.exclude": {
         ".sass-cache/": true,
         "**/*min.js": true,
-        "**/*min.css": true
+        "**/*min.css": true,
+        "src/**/*.js": true
+    },
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        ".sass-cache/": true,
+        "**/*min.js": true,
+        "**/*min.css": true,
+        "src/**/*.js": true
     }
 }
