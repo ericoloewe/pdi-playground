@@ -5,6 +5,7 @@
 /// <reference path="views/filterView.ts" />
 /// <reference path="views/transformView.ts" />
 /// <reference path="views/segmentationView.ts" />
+/// <reference path="views/morphologyView.ts" />
 /// <reference path="views/headerView.ts" />
 
 class PDIPlayGroundApplication extends Application {
@@ -64,6 +65,9 @@ class PDIPlayGroundApplication extends Application {
             ]), PDIPlayGroundApplication.actualPicture)),
             new Page(new SegmentationView(new Fragment("segmentations", "views/segmentations.html", [
                 new Fragment("panel-segmentation", "views/segmentation/panel.html")
+            ]), PDIPlayGroundApplication.actualPicture)),
+            new Page(new MorphologyView(new Fragment("morphologies", "views/morphologies.html", [
+                new Fragment("panel-morphology", "views/morphology/panel.html")
             ]), PDIPlayGroundApplication.actualPicture))
         ]);
     }
