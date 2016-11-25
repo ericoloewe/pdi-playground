@@ -2,6 +2,7 @@
 /// <reference path="../managers/segmentationManager.ts" />
 /// <reference path="../models/segmentationInfo.ts" />
 /// <reference path="../utils/math.ts" />
+/// <reference path="../controllers/controller.ts" />
 "use strict";
 
 class SegmentationView extends View {
@@ -102,7 +103,7 @@ class SegmentationView extends View {
 
         $panelFragment.find("#border form").on("submit", function (e) {
             var formData: any = new FormData(this);
-            
+
             self.enableLoader();
 
             self.applyBorderToCanvas(formData.get("filterName"), parseInt(formData.get("thresholding")));

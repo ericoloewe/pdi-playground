@@ -6,13 +6,13 @@ var todasTask = requireDir("./tasks/gulp");
 var subTask = [
     "sass",
     "scripts",
-    "resources-scripts"
+    "src-scripts"
 ];
 
 var subTaskWatch = [
     "sass:watch",
     "scripts:watch",
-    "resources-scripts:watch"
+    "src-scripts:watch"
 ];
 
 gulp.task("build", subTask, function (done) {
