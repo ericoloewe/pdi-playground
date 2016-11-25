@@ -344,28 +344,4 @@ class SegmentationView extends View {
     private restoreCanvasImage(canvas: HTMLCanvasElement = this.canvas) {
         CanvasUtil.reziseImageCanvas(this.canvas, this.segmentationManager.picture.getHtmlImage(), this.canvas.width, this.canvas.height);
     }
-
-    private enableLoader() {
-        var $icon = $("body").find(".icon-loading-shadow");
-
-        if ($icon.length > 0) {
-            $icon.remove();
-        }
-
-        $("body")
-            .append(
-            $("<div>")
-                .addClass("icon-loading-shadow")
-                .append(
-                $("<i>").addClass("glyphicon glyphicon-repeat rotate-infinite icon-loading icon-loading-center")
-                )
-            );
-    }
-
-    private disableLoader() {
-        var $icon = $("body").find(".icon-loading-shadow");
-        if ($icon.length > 0) {
-            $icon.remove();
-        }
-    }
 }

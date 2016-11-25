@@ -79,7 +79,7 @@ class View implements PageableView {
         }
     }
 
-    private enableLoader() {
+    protected enableLoader() {
         var $icon = $("body").find(".icon-loading-shadow");
 
         if ($icon.length > 0) {
@@ -96,7 +96,7 @@ class View implements PageableView {
             );
     }
 
-    private disableLoader() {
+    protected disableLoader() {
         var $icon = $("body").find(".icon-loading-shadow");
         if ($icon.length > 0) {
             $icon.remove();
