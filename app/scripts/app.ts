@@ -67,7 +67,9 @@ class PDIPlayGroundApplication extends Application {
                 new Fragment("panel-segmentation", "views/segmentation/panel.html")
             ]), PDIPlayGroundApplication.actualPicture)),
             new Page(new MorphologyView(new Fragment("morphologies", "views/morphologies.html", [
-                new Fragment("panel-morphology", "views/morphology/panel.html")
+                new Fragment("panel-morphology", "views/morphology/panels.html", [
+                    new Fragment("options", "views/morphology/panels/options.html")
+                ])
             ]), PDIPlayGroundApplication.actualPicture))
         ]);
     }

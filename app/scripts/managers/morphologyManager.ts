@@ -64,6 +64,10 @@ class MorphologyManager {
                 newImageData = this.applyRGBAMorphology(morphology, params);
                 break;
             };
+            case MorphologyType.GRAY: {
+                newImageData = this.applyGrayMorphology(morphology, params);
+                break;
+            };
         }
 
         return newImageData;
@@ -76,9 +80,6 @@ class MorphologyManager {
         var y = 0;
 
         for (var i = 0; i < originalImageData.data.length; i += 4, x++) {
-            newImageData.data[i + ColorType.RED] = this.getNewColorByMorphology(morphology, originalImageData, ColorType.RED, i, x, y, params);
-            newImageData.data[i + ColorType.BLUE] = this.getNewColorByMorphology(morphology, originalImageData, ColorType.BLUE, i, x, y, params);
-            newImageData.data[i + ColorType.GREEN] = this.getNewColorByMorphology(morphology, originalImageData, ColorType.GREEN, i, x, y, params);
             newImageData.data[i + ColorType.ALPHA] = originalImageData.data[i + ColorType.ALPHA];
 
             if (x > originalImageData.width - 1) {
@@ -98,10 +99,7 @@ class MorphologyManager {
         var y = 0;
 
         for (var i = 0; i < originalImageData.data.length; i += 4, x++) {
-            newImageData.data[i + ColorType.RED] = this.getNewColorByMorphology(morphology, originalImageData, ColorType.RED, i, x, y, params);
-            newImageData.data[i + ColorType.BLUE] = this.getNewColorByMorphology(morphology, originalImageData, ColorType.BLUE, i, x, y, params);
-            newImageData.data[i + ColorType.GREEN] = this.getNewColorByMorphology(morphology, originalImageData, ColorType.GREEN, i, x, y, params);
-            newImageData.data[i + ColorType.ALPHA] = this.getNewColorByMorphology(morphology, originalImageData, ColorType.ALPHA, i, x, y, params);
+            newImageData.data[i + ColorType.ALPHA] = originalImageData.data[i + ColorType.ALPHA];
 
             if (x > originalImageData.width - 1) {
                 y++;
@@ -112,19 +110,77 @@ class MorphologyManager {
         return newImageData;
     }
 
-    private getNewColorByMorphology(morphology: Morphology, imageData: ImageData, colorType: ColorType, index: number, x: number, y: number, params?: any): number {
+    private applyGrayMorphology(morphology: Morphology, params?: any): ImageData {
+        var originalImageData = this.picture.imageData;
+        var newImageData: ImageData = this.picture.context.createImageData(this.picture.width, this.picture.height);
+        var red: number, blue: number, green: number, gray: number;
+        var x = 0;
+        var y = 0;
+
+        for (var i = 0; i < originalImageData.data.length; i++) {
+            newImageData.data[i] = originalImageData.data[i];
+        }
+
+        for (var i = 0; i < originalImageData.data.length; i += 4, x++) {
+            red = originalImageData.data[i + ColorType.RED];
+            blue = originalImageData.data[i + ColorType.BLUE];
+            green = originalImageData.data[i + ColorType.GREEN];
+
+            gray = Math.round((red + blue + green) / 3);
+
+            newImageData = this.getDataFromMorphologyMatrix(morphology, newImageData, gray, ColorType.GRAY, i, x, y, params);
+
+            if (x > originalImageData.width - 1) {
+                y++;
+                x = 0;
+            }
+        }
+
+        return newImageData;
+    }
+
+    private getDataFromMorphologyMatrix(morphology: Morphology, imageData: ImageData, actualColor: number, colorType: ColorType, index: number, x: number, y: number, params?: any): ImageData {
         var matrix = this.picture.imageMatrix;
-        var newColor: number, actualColor: number;
+        var newColor: number;
+        var morphologyMatrix: Array<Array<number>>
         var red: number, blue: number, green: number, alpha: number;
 
-        actualColor = imageData.data[index + colorType];
-        red = imageData.data[index];
-        blue = imageData.data[index + 1];
-        green = imageData.data[index + 2];
-        alpha = imageData.data[index + 3];
+        red = imageData.data[index + ColorType.RED];
+        blue = imageData.data[index + ColorType.BLUE];
+        green = imageData.data[index + ColorType.GREEN];
+        alpha = imageData.data[index + ColorType.ALPHA];
 
-        newColor = morphology.method(new MorphologyInfo(actualColor, colorType, matrix, params, x, y, red, blue, green, alpha));
+        morphologyMatrix = morphology.method(new MorphologyInfo(actualColor, colorType, matrix, params, x, y, red, blue, green, alpha));
+        this.applyMorphologyForColorToData(matrix, morphologyMatrix, imageData, colorType, x, y);
 
-        return newColor;
+        return imageData;
+    }
+
+    private applyMorphologyForColorToData(matrix: Array<Array<Array<number>>>, morphologyMatrix: Array<Array<number>>, imageData: ImageData, colorType: ColorType, x: number, y: number) {
+        for (var i = 0; i < 3; i++) {
+            for (var j = 0; j < 3; j++) {
+                imageData.data[this.convertXYToIndex(x + (i - 1), y + (j - 1), imageData.width, imageData.height, colorType)] = morphologyMatrix[i][j];
+            }
+        }
+    }
+
+    private convertXYToIndex(x: number, y: number, matrixWidth: number, matrixHeight: number, colorType: ColorType): number {
+        var realX = x, realY = y;
+        var width = matrixWidth - 2;
+        var height = matrixHeight - 2;
+
+        if (x < 0) {
+            realX = width - x;
+        } else if (x >= width) {
+            realX = x - width;
+        }
+
+        if (y < 0) {
+            realY = height - y;
+        } else if (y >= height) {
+            realY = y - height;
+        }
+
+        return (realX + realY * matrixWidth) * 4 * colorType;
     }
 }

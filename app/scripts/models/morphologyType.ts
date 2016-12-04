@@ -2,5 +2,6 @@
 
 enum MorphologyType {
     RGB,
-    RGBA
+    RGBA,
+    GRAY
 }
