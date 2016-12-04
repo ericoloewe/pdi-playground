@@ -51,6 +51,7 @@ class MorphologyView extends View {
 
     private loadCanvas() {
         var $canvasSection = this.fragment.$htmlLoadedWithChilds.find("#MORPHOLOGY_CANVAS_SECTION");
+        $canvasSection.find("canvas").remove();
         var canvas = CanvasUtil.createCustomCanvas(this.canvasWidth, this.canvasHeight, this.morphologyManager.picture.getHtmlImage(), "MORPHOLOGY_CANVAS", "pdi-canvas");
         this.canvas = canvas;
         $canvasSection.append(canvas);
@@ -62,14 +63,16 @@ class MorphologyView extends View {
         this.morphologyManager.addMorphology(new Morphology("DILATACAO-CINZA", function (info: MorphologyInfo) {
             var x = info.x, y = info.y, matrix: Array<Array<number>> = info.params.matrix;
             var dilatationMatrix = new Array([], [], []);
+            var covolution: number;
             var max = 0;
 
             for (var i = 0; i < 3; i++) {
                 for (var j = 0; j < 3; j++) {
-                    if (matrix[i][j] !== undefined && max < (matrix[i][j] + getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), info.colorType))) {
-                        max = matrix[i][j] + getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), info.colorType);
-                    } else if (max < getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), info.colorType)) {
-                        max = getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), info.colorType);
+                    covolution = getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), info.colorType);
+                    if (matrix[i][j] !== undefined && max < (matrix[i][j] + covolution)) {
+                        max = matrix[i][j] + covolution;
+                    } else if (max < covolution) {
+                        max = covolution;
                     }
                 }
             }
@@ -86,14 +89,16 @@ class MorphologyView extends View {
         this.morphologyManager.addMorphology(new Morphology("EROCAO-CINZA", function (info: MorphologyInfo) {
             var x = info.x, y = info.y, matrix: Array<Array<number>> = info.params.matrix;
             var dilatationMatrix = new Array([], [], []);
+            var covolution: number;
             var min = 0;
 
             for (var i = 0; i < 3; i++) {
                 for (var j = 0; j < 3; j++) {
-                    if (matrix[i][j] !== undefined && min > (matrix[i][j] + getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), info.colorType))) {
-                        min = matrix[i][j] + getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), info.colorType);
-                    } else if (min < getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), info.colorType)) {
-                        min = getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), info.colorType);
+                    covolution = getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), info.colorType);
+                    if (matrix[i][j] !== undefined && min > (matrix[i][j] + covolution)) {
+                        min = matrix[i][j] + covolution;
+                    } else if (min < covolution) {
+                        min = covolution;
                     }
                 }
             }
@@ -113,13 +118,13 @@ class MorphologyView extends View {
             var height = matrix.length - 2;
 
             if (x < 0) {
-                realX = width - x;
+                realX = width - Math.abs(x);
             } else if (x >= width) {
                 realX = x - width;
             }
 
             if (y < 0) {
-                realY = height - y;
+                realY = height - Math.abs(y);
             } else if (y >= height) {
                 realY = y - height;
             }
@@ -135,11 +140,13 @@ class MorphologyView extends View {
     }
 
     private applyDilatationToCanvas(matrix: number) {
+        this.restoreCanvasImage();
         this.segmentationManager.applySegmentationByNameToCanvas("CINZA", this.canvas);
         this.morphologyManager.applyMorphologyByNameToCanvas("DILATACAO-CINZA", this.canvas, { matrix: matrix });
     }
 
     private applyErosionToCanvas(matrix: number) {
+        this.restoreCanvasImage();
         this.segmentationManager.applySegmentationByNameToCanvas("CINZA", this.canvas);
         this.morphologyManager.applyMorphologyByNameToCanvas("EROCAO-CINZA", this.canvas, { matrix: matrix });
     }
