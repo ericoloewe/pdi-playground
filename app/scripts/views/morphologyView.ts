@@ -36,6 +36,8 @@ class MorphologyView extends View {
             this.bindEvents();
             // this.applyDilatationToCanvas(matrixTeste);
             this.applyErosionToCanvas(matrixTeste);
+            this.applyErosionToCanvas(matrixTeste);
+            this.applyErosionToCanvas(matrixTeste);
         }.bind(this));
     }
 
@@ -64,11 +66,12 @@ class MorphologyView extends View {
             var x = info.x, y = info.y, matrix: Array<Array<number>> = info.params.matrix;
             var dilatationMatrix = new Array([], [], []);
             var covolution: number;
-            var max = 0;
+            var max = getColorByCovolution(info.matrix, x, y, info.colorType);
 
             for (var i = 0; i < 3; i++) {
                 for (var j = 0; j < 3; j++) {
                     covolution = getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), info.colorType);
+
                     if (matrix[i][j] !== undefined && max < (matrix[i][j] + covolution)) {
                         max = matrix[i][j] + covolution;
                     } else if (max < covolution) {
@@ -90,14 +93,15 @@ class MorphologyView extends View {
             var x = info.x, y = info.y, matrix: Array<Array<number>> = info.params.matrix;
             var dilatationMatrix = new Array([], [], []);
             var covolution: number;
-            var min = 0;
+            var min = getColorByCovolution(info.matrix, x, y, info.colorType);
 
             for (var i = 0; i < 3; i++) {
                 for (var j = 0; j < 3; j++) {
                     covolution = getColorByCovolution(info.matrix, x + (i - 1), y + (j - 1), info.colorType);
+
                     if (matrix[i][j] !== undefined && min > (matrix[i][j] + covolution)) {
                         min = matrix[i][j] + covolution;
-                    } else if (min < covolution) {
+                    } else if (min > covolution) {
                         min = covolution;
                     }
                 }
@@ -114,8 +118,8 @@ class MorphologyView extends View {
 
         function getColorByCovolution(matrix: Array<Array<Array<number>>>, x: number, y: number, colorType: ColorType) {
             var realX = x, realY = y;
-            var width = matrix[0].length - 2;
-            var height = matrix.length - 2;
+            var width = matrix[0].length - 1;
+            var height = matrix.length - 1;
 
             if (x < 0) {
                 realX = width - Math.abs(x);
@@ -140,14 +144,10 @@ class MorphologyView extends View {
     }
 
     private applyDilatationToCanvas(matrix: number) {
-        this.restoreCanvasImage();
-        this.segmentationManager.applySegmentationByNameToCanvas("CINZA", this.canvas);
         this.morphologyManager.applyMorphologyByNameToCanvas("DILATACAO-CINZA", this.canvas, { matrix: matrix });
     }
 
     private applyErosionToCanvas(matrix: number) {
-        this.restoreCanvasImage();
-        this.segmentationManager.applySegmentationByNameToCanvas("CINZA", this.canvas);
         this.morphologyManager.applyMorphologyByNameToCanvas("EROCAO-CINZA", this.canvas, { matrix: matrix });
     }
 

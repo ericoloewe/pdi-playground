@@ -124,14 +124,10 @@ class MorphologyManager {
                 x = 0;
             }
 
-            newImageData.data[i + ColorType.RED] = originalImageData.data[i + ColorType.RED];
-            newImageData.data[i + ColorType.BLUE] = originalImageData.data[i + ColorType.BLUE];
-            newImageData.data[i + ColorType.GREEN] = originalImageData.data[i + ColorType.GREEN];
+            red = newImageData.data[i + ColorType.RED] = originalImageData.data[i + ColorType.RED];
+            blue = newImageData.data[i + ColorType.GREEN] = originalImageData.data[i + ColorType.GREEN];
+            green = newImageData.data[i + ColorType.BLUE] = originalImageData.data[i + ColorType.BLUE];
             newImageData.data[i + ColorType.ALPHA] = originalImageData.data[i + ColorType.ALPHA];
-
-            red = newImageData.data[i + ColorType.RED];
-            blue = newImageData.data[i + ColorType.BLUE];
-            green = newImageData.data[i + ColorType.GREEN];
 
             gray = Math.round((red + blue + green) / 3);
 
@@ -145,7 +141,7 @@ class MorphologyManager {
 
         for (var i = 0; i < matrix.length; i++) {
             for (var j = 0; j < matrix[i].length; j++) {
-                newImageData = this.getDataFromMorphologyMatrix(morphology, newImageData, matrix[i][j][ColorType.GRAY], ColorType.GRAY, j, i, matrix, params);
+                this.getDataFromMorphologyMatrix(morphology, newImageData, matrix[i][j][ColorType.GRAY], ColorType.GRAY, j, i, matrix, params);
             }
         }
 
@@ -174,8 +170,8 @@ class MorphologyManager {
 
     private convertXYToIndex(x: number, y: number, matrixWidth: number, matrixHeight: number, colorType: ColorType): number {
         var realX = x, realY = y;
-        var width = matrixWidth - 2;
-        var height = matrixHeight - 2;
+        var width = matrixWidth - 1;
+        var height = matrixHeight - 1;
 
         if (x < 0) {
             realX = width - Math.abs(x);
@@ -189,6 +185,6 @@ class MorphologyManager {
             realY = y - height;
         }
 
-        return (realX + realY * matrixWidth) * 4 * colorType;
+        return (realX + realY * width) * 4 + colorType;
     }
 }
